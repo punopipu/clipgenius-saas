@@ -110,19 +110,23 @@
   </main>
 
   <script>
-    // Inicialización para Paddle Billing (v2)
-    window.onload = function() {
+    // Inicialización con el Client-side Token real de Paddle v2
+    document.addEventListener("DOMContentLoaded", async function() {
       if (typeof Paddle !== 'undefined') {
-        Paddle.Environment.set('production'); // Usar entorno real
-        Paddle.Initialize({ 
-          seller: 445362 
-        });
+        try {
+          Paddle.Initialize({ 
+            token: "live_db6ecf4e8829d5e525d6b07ecbf" 
+          });
+          console.log("Paddle v2 inicializado correctamente con token de cliente.");
+        } catch (error) {
+          console.error("Error al inicializar Paddle:", error);
+        }
       }
-    };
+    });
 
     function subscribeWithPaddle(priceId) {
       if (typeof Paddle === 'undefined') {
-        alert("Cargando la pasarela de pago... Por favor reintenta en un momento.");
+        alert("La pasarela de pago sigue cargando. Intenta de nuevo en unos segundos.");
         return;
       }
       
@@ -131,9 +135,11 @@
           { priceId: priceId, quantity: 1 }
         ],
         settings: {
-          displayMode: "overlay",
-          theme: "dark",
-          successUrl: window.location.href
+          successCallback: function(data) {
+            alert("¡Suscripción realizada con éxito!");
+            document.getElementById('paywall-card').classList.add('hidden');
+            document.getElementById('analyzer-card').classList.remove('hidden');
+          }
         }
       });
     }
