@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ClipGenius & AuditAI</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Script de Paddle Classic -->
-  <script src="https://cdn.paddle.com/paddle/paddle.js"></script>
+  <!-- SDK Oficial de Paddle v2 (Billing) -->
+  <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans">
 
@@ -110,25 +110,30 @@
   </main>
 
   <script>
-    // Inicialización de Paddle
+    // Inicialización para Paddle Billing (v2)
     window.onload = function() {
       if (typeof Paddle !== 'undefined') {
-        Paddle.Setup({ vendor: 445362 });
+        Paddle.Environment.set('production'); // Usar entorno real
+        Paddle.Initialize({ 
+          seller: 445362 
+        });
       }
     };
 
     function subscribeWithPaddle(priceId) {
       if (typeof Paddle === 'undefined') {
-        alert("Cargando pasarela de pago... Por favor reintenta en un momento.");
+        alert("Cargando la pasarela de pago... Por favor reintenta en un momento.");
         return;
       }
       
       Paddle.Checkout.open({
-        product: priceId,
-        successCallback: function(data) {
-          alert("¡Suscripción realizada con éxito!");
-          document.getElementById('paywall-card').classList.add('hidden');
-          document.getElementById('analyzer-card').classList.remove('hidden');
+        items: [
+          { priceId: priceId, quantity: 1 }
+        ],
+        settings: {
+          displayMode: "overlay",
+          theme: "dark",
+          successUrl: window.location.href
         }
       });
     }
