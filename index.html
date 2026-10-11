@@ -1,43 +1,156 @@
-<script>
-    // Inicialización de Paddle Classic
-    document.addEventListener("DOMContentLoaded", function() {
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClipGenius & AuditAI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Script de Paddle Classic -->
+  <script src="https://cdn.paddle.com/paddle/paddle.js"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 p-4 flex justify-between items-center max-w-6xl mx-auto w-full">
+    <h1 class="text-xl font-bold flex items-center gap-2">
+      <span class="text-indigo-500">⚡</span> ClipGenius & AuditAI
+    </h1>
+    <span class="text-xs bg-indigo-950 text-indigo-300 border border-indigo-800 px-3 py-1 rounded-full font-mono">
+      Powered by Gemini Flash
+    </span>
+  </header>
+
+  <main class="flex-1 max-w-5xl mx-auto w-full p-6 flex flex-col items-center justify-center">
+    
+    <!-- SECCIÓN DE PLANES / PAYWALL -->
+    <div id="paywall-card" class="w-full space-y-8 my-auto">
+      <div class="text-center">
+        <h2 class="text-3xl font-extrabold text-white">Elige tu plan en ClipGenius & AuditAI</h2>
+        <p class="text-slate-400 text-sm mt-2">Planes flexibles pensados para creadores y empresas</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        
+        <!-- Plan Básico ($10.000 CLP) -->
+        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between hover:border-slate-700 transition shadow-xl">
+          <div>
+            <h3 class="text-lg font-bold text-slate-200">Básico</h3>
+            <p class="text-3xl font-extrabold my-4 text-white">$10.000 <span class="text-xs font-normal text-slate-400">CLP / mes</span></p>
+            <ul class="text-xs text-slate-300 space-y-2 mb-6">
+              <li>✔ 15 análisis de video o audio al mes</li>
+              <li>✔ Marcas de tiempo automáticas</li>
+              <li>✔ Resúmenes ejecutivos</li>
+              <li>✔ Videos de hasta 30 minutos</li>
+            </ul>
+          </div>
+          <button onclick="subscribeWithPaddle('pri_01m4pbt2be8869nvtkywdqc7g0')" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold py-2.5 rounded-xl transition">
+            Elegir Básico
+          </button>
+        </div>
+
+        <!-- Plan Pro Creador ($20.000 CLP) -->
+        <div class="bg-slate-900 border-2 border-indigo-500 p-6 rounded-2xl flex flex-col justify-between relative shadow-2xl shadow-indigo-500/10">
+          <span class="absolute -top-3 right-6 bg-indigo-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">Más Popular</span>
+          <div>
+            <h3 class="text-lg font-bold text-indigo-400">Pro Creador</h3>
+            <p class="text-3xl font-extrabold my-4 text-white">$20.000 <span class="text-xs font-normal text-slate-400">CLP / mes</span></p>
+            <ul class="text-xs text-slate-300 space-y-2 mb-6">
+              <li>✔ Análisis ilimitados de video y audio</li>
+              <li>✔ Videos pesados sin límite de duración</li>
+              <li>✔ Exportación de marcas de tiempo y guiones</li>
+              <li>✔ Procesamiento prioritario con Gemini</li>
+            </ul>
+          </div>
+          <button onclick="subscribeWithPaddle('pri_01m4pbvp9fepa4dzn7bc4vhgep')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl transition shadow-lg shadow-indigo-600/30">
+            Elegir Pro
+          </button>
+        </div>
+
+        <!-- Plan Business AuditAI ($35.000 CLP) -->
+        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between hover:border-slate-700 transition shadow-xl">
+          <div>
+            <h3 class="text-lg font-bold text-emerald-400">Business / AuditAI</h3>
+            <p class="text-3xl font-extrabold my-4 text-white">$35.000 <span class="text-xs font-normal text-slate-400">CLP / mes</span></p>
+            <ul class="text-xs text-slate-300 space-y-2 mb-6">
+              <li>✔ Todo lo del Plan Pro</li>
+              <li>✔ Auditoría masiva de PDFs y Contratos</li>
+              <li>✔ Detección de cláusulas y riesgos</li>
+              <li>✔ Soporte directo y personalizado</li>
+            </ul>
+          </div>
+          <button onclick="subscribeWithPaddle('pri_01m4pbyh5jjsg4evyhsf4c5a9s')" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold py-2.5 rounded-xl transition">
+            Elegir Business
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SECCIÓN DEL ANALIZADOR -->
+    <div id="analyzer-card" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-8 w-full max-w-2xl shadow-2xl space-y-6">
+      <div class="text-center">
+        <h2 class="text-2xl font-bold">Analizador Multimodal Pro</h2>
+        <p class="text-slate-400 text-sm mt-1">Sube tu video o documento para procesar con IA.</p>
+      </div>
+
+      <div id="drop-zone" class="border-2 border-dashed border-slate-700 hover:border-indigo-500 rounded-xl p-8 text-center cursor-pointer transition">
+        <input type="file" id="file-input" class="hidden" />
+        <div class="text-4xl mb-2">📁</div>
+        <p class="text-slate-300 text-sm font-medium" id="file-label">Haz clic para seleccionar o arrastra un archivo</p>
+        <p class="text-slate-500 text-xs mt-1">Soporta MP4, MP3, PDF, etc.</p>
+      </div>
+
+      <button id="submit-btn" onclick="processAnalysis()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-xl transition">
+        Iniciar Análisis
+      </button>
+
+      <div id="results" class="hidden space-y-4 pt-4 border-t border-slate-800"></div>
+    </div>
+
+  </main>
+
+  <script>
+    // Inicialización de Paddle
+    window.onload = function() {
       if (typeof Paddle !== 'undefined') {
         Paddle.Setup({ vendor: 445362 });
       }
-    });
+    };
 
     function subscribeWithPaddle(priceId) {
       if (typeof Paddle === 'undefined') {
-        alert("El script de Paddle aún está cargando. Intenta de nuevo en unos segundos.");
+        alert("Cargando pasarela de pago... Por favor reintenta en un momento.");
         return;
       }
-
-      // Abrir pasarela de Paddle Classic
+      
       Paddle.Checkout.open({
         product: priceId,
         successCallback: function(data) {
-          alert("¡Pago realizado con éxito! Bienvenido a ClipGenius.");
+          alert("¡Suscripción realizada con éxito!");
           document.getElementById('paywall-card').classList.add('hidden');
           document.getElementById('analyzer-card').classList.remove('hidden');
         }
       });
     }
 
-    // Lógica para enviar el archivo al backend seguro
+    // Lógica del Analizador
     const fileInput = document.getElementById('file-input');
     const dropZone = document.getElementById('drop-zone');
     let selectedFile = null;
 
-    dropZone.onclick = () => fileInput.click();
-    fileInput.onchange = (e) => {
+    dropZone.onclick = function() { fileInput.click(); };
+    fileInput.onchange = function(e) {
       selectedFile = e.target.files[0];
       if (selectedFile) {
-        document.getElementById('file-label').innerText = `Seleccionado: ${selectedFile.name}`;
+        document.getElementById('file-label').innerText = "Seleccionado: " + selectedFile.name;
       }
     };
 
     async function processAnalysis() {
-      if (!selectedFile) return alert("Por favor selecciona un archivo primero.");
+      if (!selectedFile) {
+        alert("Por favor selecciona un archivo primero.");
+        return;
+      }
       
       const submitBtn = document.getElementById('submit-btn');
       submitBtn.disabled = true;
@@ -57,10 +170,7 @@
 
         const resultsDiv = document.getElementById('results');
         resultsDiv.classList.remove('hidden');
-        resultsDiv.innerHTML = `
-          <h3 class="text-lg font-bold text-indigo-400">Resumen Ejecutivo</h3>
-          <p class="text-slate-300 text-sm mb-4">${data.resumen_ejecutivo}</p>
-        `;
+        resultsDiv.innerHTML = '<h3 class="text-lg font-bold text-indigo-400">Resumen Ejecutivo</h3><p class="text-slate-300 text-sm mb-4">' + data.resumen_ejecutivo + '</p>';
       } catch (err) {
         alert("Error: " + err.message);
       } finally {
@@ -69,3 +179,5 @@
       }
     }
   </script>
+</body>
+</html>
