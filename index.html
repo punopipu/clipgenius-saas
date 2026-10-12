@@ -41,7 +41,7 @@
     </div>
   </header>
 
-  <!-- Hero Section Extenso -->
+  <!-- Hero Section -->
   <section class="relative pt-32 pb-24 px-6 text-center overflow-hidden">
     <div class="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none">
       <div class="w-[600px] h-[600px] bg-indigo-600/10 blur-[160px] rounded-full"></div>
@@ -88,7 +88,7 @@
     </div>
   </section>
 
-  <!-- SECCIÓN ESTRATÉGICA: ¿POR QUÉ ES MEJOR QUE EL TRABAJO MANUAL O IAs CONVENCIONALES? -->
+  <!-- Sección Comparativa -->
   <section id="por-que-nosotros" class="py-24 px-6 border-t border-slate-900 bg-slate-950/80 relative">
     <div class="max-w-7xl mx-auto">
       <div class="text-center max-w-3xl mx-auto mb-16">
@@ -98,8 +98,6 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-        
-        <!-- Opción 1: Trabajo Manual -->
         <div class="bg-slate-900/40 border border-slate-800 p-8 rounded-3xl opacity-80 hover:opacity-100 transition">
           <div class="text-red-400 text-3xl mb-4">⏳</div>
           <h4 class="text-xl font-bold text-white mb-2">Trabajo Manual</h4>
@@ -120,7 +118,6 @@
           </ul>
         </div>
 
-        <!-- Opción 2: IA Convencional -->
         <div class="bg-slate-900/40 border border-slate-800 p-8 rounded-3xl opacity-80 hover:opacity-100 transition">
           <div class="text-amber-400 text-3xl mb-4">🤖</div>
           <h4 class="text-xl font-bold text-white mb-2">IA Convencional (ChatGPT, Claude, Grok)</h4>
@@ -141,7 +138,6 @@
           </ul>
         </div>
 
-        <!-- Opción 3: Nuestra Plataforma (Especializada) -->
         <div class="bg-slate-900 border-2 border-indigo-500/80 p-8 rounded-3xl relative shadow-2xl shadow-indigo-500/10 bg-gradient-to-b from-slate-900 via-slate-900 to-indigo-950/30">
           <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wider">
             Especializado & Automatizado
@@ -164,12 +160,11 @@
             </li>
           </ul>
         </div>
-
       </div>
     </div>
   </section>
 
-  <!-- Sección Detallada de Soluciones -->
+  <!-- Soluciones -->
   <section id="soluciones" class="py-24 px-6 border-t border-slate-900 bg-slate-950/60">
     <div class="max-w-7xl mx-auto">
       <div class="text-center max-w-3xl mx-auto mb-16">
@@ -178,7 +173,6 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-        <!-- Bloque ClipGenius -->
         <div class="bg-slate-900/80 border border-slate-800 p-8 md:p-10 rounded-3xl relative overflow-hidden flex flex-col justify-between">
           <div>
             <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-2xl mb-6">🎬</div>
@@ -197,7 +191,6 @@
           </a>
         </div>
 
-        <!-- Bloque AuditAI -->
         <div class="bg-slate-900/80 border border-slate-800 p-8 md:p-10 rounded-3xl relative overflow-hidden flex flex-col justify-between">
           <div>
             <div class="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-2xl mb-6">⚖️</div>
@@ -219,7 +212,7 @@
     </div>
   </section>
 
-  <!-- Sección: Cómo Funciona -->
+  <!-- Pasos -->
   <section id="como-funciona" class="py-24 px-6 border-t border-slate-900">
     <div class="max-w-7xl mx-auto">
       <div class="text-center max-w-3xl mx-auto mb-16">
@@ -232,7 +225,7 @@
           <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white font-bold flex items-center justify-center mb-6 shadow-lg shadow-indigo-600/30">1</div>
           <h4 class="text-xl font-bold mb-3 text-white">Regístrate con tu Correo</h4>
           <p class="text-slate-400 text-sm leading-relaxed">
-            Crea tu cuenta segura con correo y contraseña en nuestra plataforma protegida por Supabase. Acceso inmediato a tu panel de usuario.
+            Crea tu cuenta segura con correo y contraseña en nuestra plataforma protegida. Acceso inmediato a tu panel de usuario.
           </p>
         </div>
         <div class="bg-slate-900/50 border border-slate-800 p-8 rounded-3xl">
@@ -253,10 +246,10 @@
     </div>
   </section>
 
-  <!-- Sección Interactiva de Autenticación y Consola Protegida -->
+  <!-- Autenticación / Consola Protegida -->
   <section id="app-area" class="py-24 px-6 max-w-4xl mx-auto">
     
-    <!-- CARD 1: FORMULARIO DE LOGIN / REGISTRO (CON CAMBIO DINÁMICO) -->
+    <!-- CARD 1: FORMULARIO DE LOGIN / REGISTRO -->
     <div id="authCard" class="bg-slate-900 border border-slate-800 rounded-3xl p-8 md:p-12 shadow-2xl">
       <div class="text-center mb-8">
         <span class="text-xs font-semibold text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20 uppercase tracking-widest">Seguridad Estricta</span>
@@ -280,7 +273,7 @@
       </form>
 
       <div class="text-center mt-6">
-        <button onclick="toggleAuthMode()" id="btnToggleAuth" class="text-xs font-medium text-indigo-400 hover:underline">
+        <button type="button" onclick="toggleAuthMode()" id="btnToggleAuth" class="text-xs font-medium text-indigo-400 hover:underline cursor-pointer">
           ¿No tienes cuenta? Regístrate aquí mismo
         </button>
       </div>
@@ -318,7 +311,7 @@
 
   </section>
 
-  <!-- Sección de Planes y Precios Detallada -->
+  <!-- Planes y Precios -->
   <section id="planes" class="py-24 px-6 border-t border-slate-900 bg-slate-950/40">
     <div class="max-w-7xl mx-auto text-center mb-16">
       <span class="text-xs font-semibold text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20 uppercase tracking-widest">Inversión Transparente</span>
@@ -327,8 +320,6 @@
     </div>
 
     <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-      
-      <!-- Plan Básico -->
       <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 flex flex-col justify-between transition hover:border-slate-700">
         <div>
           <h4 class="text-xl font-bold text-white mb-2">Plan Básico</h4>
@@ -345,7 +336,6 @@
         </a>
       </div>
 
-      <!-- Plan Pro Creador (Destacado) -->
       <div class="bg-slate-900 border border-indigo-500/60 rounded-3xl p-8 flex flex-col justify-between relative shadow-2xl shadow-indigo-500/15 md:-translate-y-3">
         <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wider shadow-md">
           Más Popular
@@ -365,7 +355,6 @@
         </a>
       </div>
 
-      <!-- Plan Business -->
       <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 flex flex-col justify-between transition hover:border-slate-700">
         <div>
           <h4 class="text-xl font-bold text-white mb-2">Business & AuditAI</h4>
@@ -380,38 +369,6 @@
         <a href="https://tally.so/r/BzOgeY" target="_blank" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold py-3.5 rounded-xl text-center text-sm transition">
           Suscribirme a Business
         </a>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Sección de Preguntas Frecuentes (FAQ) -->
-  <section class="py-24 px-6 border-t border-slate-900">
-    <div class="max-w-4xl mx-auto">
-      <div class="text-center mb-16">
-        <h3 class="text-3xl font-black text-white mb-3">Preguntas Frecuentes</h3>
-        <p class="text-slate-400">Todo lo que necesitas saber sobre el servicio y la activación en Chile.</p>
-      </div>
-
-      <div class="space-y-6">
-        <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl">
-          <h4 class="text-lg font-bold text-white mb-2">¿Cómo se activa mi cuenta después de pagar en Tally?</h4>
-          <p class="text-slate-400 text-sm leading-relaxed">
-            Una vez que realizas tu transferencia bancaria o pago por CuentaRUT y envías el formulario en Tally con tu correo registrado, nuestro equipo verifica la transacción y habilita tu nivel de plan en la base de datos de manera inmediata.
-          </p>
-        </div>
-        <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl">
-          <h4 class="text-lg font-bold text-white mb-2">¿Es seguro procesar contratos confidenciales en AuditAI?</h4>
-          <p class="text-slate-400 text-sm leading-relaxed">
-            Absolutamente. La plataforma cuenta con autenticación cifrada mediante Supabase y las solicitudes son procesadas de forma privada y segura a través de nuestro backend en Vercel conectado directamente al motor oficial de Gemini 2.0 Flash.
-          </p>
-        </div>
-        <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl">
-          <h4 class="text-lg font-bold text-white mb-2">¿Puedo cambiar de plan más adelante?</h4>
-          <p class="text-slate-400 text-sm leading-relaxed">
-            Sí. Puedes actualizar tu nivel de plan en cualquier momento contactando a nuestro soporte o gestionándolo mediante los canales de pago habilitados.
-          </p>
-        </div>
       </div>
     </div>
   </section>
@@ -456,16 +413,19 @@
     </div>
   </footer>
 
-  <!-- Lógica de Autenticación y Frontend Protegido (CORREGIDO) -->
+  <!-- Lógica de Autenticación Unificada (CORREGIDA) -->
   <script>
-    // Configura con tus credenciales reales de Supabase
+    // Inicialización de Supabase con verificación previa
     const SUPABASE_URL = "https://TU_PROYECTO.supabase.co";
     const SUPABASE_KEY = "TU_ANON_KEY_DE_SUPABASE";
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    
+    let supabaseClient = null;
+    if (typeof window.supabase !== 'undefined' && SUPABASE_URL.indexOf('TU_PROYECTO') === -1) {
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    }
 
     let isLoginMode = true;
 
-    // Alternar entre modo Login y Registro
     function toggleAuthMode() {
       setAuthMode(!isLoginMode);
     }
@@ -495,14 +455,15 @@
       document.getElementById('authCard').scrollIntoView({ behavior: 'smooth' });
     }
 
-    // Monitorear estado de sesión al cargar la página
     window.addEventListener('load', async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      updateUI(session);
-
-      supabase.auth.onAuthStateChange((_event, session) => {
+      if (supabaseClient) {
+        const { data: { session } } = await supabaseClient.auth.getSession();
         updateUI(session);
-      });
+
+        supabaseClient.auth.onAuthStateChange((_event, session) => {
+          updateUI(session);
+        });
+      }
     });
 
     function updateUI(session) {
@@ -524,21 +485,32 @@
       const email = document.getElementById('authEmail').value;
       const password = document.getElementById('authPassword').value;
 
+      if (!supabaseClient) {
+        alert(isLoginMode ? "Modo Demostración: Iniciar Sesión simulado correctamente." : "Modo Demostración: Registro de cuenta simulado correctamente.");
+        document.getElementById('authCard').classList.add('hidden');
+        document.getElementById('consoleCard').classList.remove('hidden');
+        document.getElementById('userEmailDisplay').innerText = email;
+        return;
+      }
+
       if (isLoginMode) {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
         if (error) alert("Error al iniciar sesión: " + error.message);
       } else {
-        const { error } = await supabase.auth.signUp({ email, password });
+        const { error } = await supabaseClient.auth.signUp({ email, password });
         if (error) alert("Error al registrarse: " + error.message);
         else alert("¡Cuenta creada con éxito! Ya puedes iniciar sesión.");
       }
     }
 
     async function logout() {
-      await supabase.auth.signOut();
+      if (supabaseClient) {
+        await supabaseClient.auth.signOut();
+      }
+      document.getElementById('authCard').classList.remove('hidden');
+      document.getElementById('consoleCard').classList.add('hidden');
     }
 
-    // Llamada segura al backend validando sesión JWT
     async function ejecutarAnalisisSeguro() {
       const texto = document.getElementById('textContent').value;
       const output = document.getElementById('resultadoOutput');
@@ -549,36 +521,34 @@
         return;
       }
 
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        alert("Sesión no válida o caducada. Inicia sesión nuevamente.");
-        return;
-      }
-
       btn.disabled = true;
       btn.innerText = "Verificando cuenta y consultando a Gemini 2.0...";
       output.innerText = "Enviando datos al servidor seguro...";
+
+      let token = "";
+      if (supabaseClient) {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (session) token = session.access_token;
+      }
 
       try {
         const res = await fetch('/api/analyze', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + session.access_token
+            'Authorization': 'Bearer ' + token
           },
-          body: JSON.stringify({
-            textData: texto
-          })
+          body: JSON.stringify({ textData: texto })
         });
 
         const data = await res.json();
         if (res.ok && data.success) {
           output.innerText = data.analysis;
         } else {
-          output.innerText = "Acceso denegado: " + (data.error || "No autorizado.");
+          output.innerText = "Respuesta del Servidor: " + (data.error || "No autorizado o falta configurar las claves de Supabase/Gemini.");
         }
       } catch (err) {
-        output.innerText = "Error crítico de conexión con el servidor backend.";
+        output.innerText = "Error de conexión con el backend (/api/analyze). Verifica que tu servidor Vercel esté activo.";
       } finally {
         btn.disabled = false;
         btn.innerText = "Ejecutar Análisis con Gemini 2.0 (Seguro)";
