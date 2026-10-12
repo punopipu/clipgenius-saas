@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ClipGenius & AuditAI | Inteligencia Artificial Multimodal para Creadores y Empresas en Chile</title>
+  <title>ClipGenius & AuditAI | IA Multimodal para Creadores y Empresas en Chile</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Supabase JS Client -->
@@ -23,15 +23,15 @@
       </h1>
       <nav class="hidden lg:flex items-center gap-8 text-sm text-slate-400 font-medium">
         <a href="#soluciones" class="hover:text-white transition">Soluciones</a>
+        <a href="#por-que-nosotros" class="hover:text-white transition">¿Por qué elegirnos?</a>
         <a href="#como-funciona" class="hover:text-white transition">Cómo Funciona</a>
-        <a href="#para-quien" class="hover:text-white transition">Casos de Uso</a>
         <a href="#planes" class="hover:text-white transition">Precios</a>
         <a href="#app-area" class="hover:text-white transition">Consola IA</a>
       </nav>
       
       <!-- Estado de Autenticación Rápida -->
       <div id="authHeaderButtons" class="flex items-center gap-3">
-        <a href="#authModal" onclick="document.getElementById('authCard').scrollIntoView({behavior: 'smooth'})" class="text-xs font-semibold text-slate-300 hover:text-white px-3 py-2 transition">
+        <a href="#app-area" onclick="document.getElementById('authCard').scrollIntoView({behavior: 'smooth'})" class="text-xs font-semibold text-slate-300 hover:text-white px-3 py-2 transition">
           Iniciar Sesión
         </a>
         <a href="#planes" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2.5 rounded-full transition shadow-lg shadow-indigo-600/25">
@@ -41,7 +41,7 @@
     </div>
   </header>
 
-  <!-- Hero Section Extenso y Visual -->
+  <!-- Hero Section Extenso -->
   <section class="relative pt-32 pb-24 px-6 text-center overflow-hidden">
     <div class="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none">
       <div class="w-[600px] h-[600px] bg-indigo-600/10 blur-[160px] rounded-full"></div>
@@ -82,8 +82,90 @@
         </div>
         <div class="bg-slate-900/40 p-4 rounded-2xl border border-slate-800/60">
           <div class="text-2xl font-black text-white mb-1">Chile</div>
-          <div class="text-xs text-slate-400">Pagos locales y soporte directo</div>
+          <div class="text-xs text-slate-400">Pagos locales vía CuentaRUT</div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NUEVA SECCIÓN ESTRATÉGICA: ¿POR QUÉ ES MEJOR QUE EL TRABAJO MANUAL O IAs CONVENCIONALES? -->
+  <section id="por-que-nosotros" class="py-24 px-6 border-t border-slate-900 bg-slate-950/80 relative">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="text-xs font-semibold text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20 uppercase tracking-widest">Ventaja Competitiva</span>
+        <h3 class="text-3xl md:text-5xl font-black text-white mt-3 mb-4">¿Por qué usar ClipGenius & AuditAI en vez de alternativas tradicionales?</h3>
+        <p class="text-slate-400">Compara el rendimiento directo frente al trabajo humano manual y a los chats de inteligencia artificial genéricos.</p>
+      </div>
+
+      <!-- Tabla Comparativa Visual -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        
+        <!-- Opción 1: Trabajo Manual -->
+        <div class="bg-slate-900/40 border border-slate-800 p-8 rounded-3xl opacity-80 hover:opacity-100 transition">
+          <div class="text-red-400 text-3xl mb-4">⏳</div>
+          <h4 class="text-xl font-bold text-white mb-2">Trabajo Manual</h4>
+          <p class="text-slate-500 text-xs mb-6">Revisión tradicional por humanos o redactores.</p>
+          <ul class="text-sm text-slate-400 space-y-4">
+            <li class="flex items-start gap-2">
+              <span class="text-red-500 font-bold">✕</span>
+              <span><strong>Tardanza extrema:</strong> Tomar notas o encontrar marcas de tiempo en 2 horas de video toma hasta 4 horas de trabajo continuo.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-red-500 font-bold">✕</span>
+              <span><strong>Alto costo operativo:</strong> Horas hombre dedicadas a tareas repetitivas o cobros por honorarios de revisión por página.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-red-500 font-bold">✕</span>
+              <span><strong>Sesgo y fatiga:</strong> Alto margen de error humano al revisar contratos largos o cláusulas al final del día.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Opción 2: IA Convencional -->
+        <div class="bg-slate-900/40 border border-slate-800 p-8 rounded-3xl opacity-80 hover:opacity-100 transition">
+          <div class="text-amber-400 text-3xl mb-4">🤖</div>
+          <h4 class="text-xl font-bold text-white mb-2">IA Convencional (ChatGPT, Claude, Grok)</h4>
+          <p class="text-slate-500 text-xs mb-6">Prompts genéricos ingresados en chats públicos.</p>
+          <ul class="text-sm text-slate-400 space-y-4">
+            <li class="flex items-start gap-2">
+              <span class="text-amber-500 font-bold">⚠️</span>
+              <span><strong>Respuestas genéricas y superficiales:</strong> Un chat general te dará resúmenes vagos sin estructura de auditoría ni formato de publicación.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-amber-500 font-bold">⚠️</span>
+              <span><strong>Prompting manual tedioso:</strong> Tienes que escribir instrucciones extensas cada vez que entras para intentar obtener buenos resultados.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-amber-500 font-bold">⚠️</span>
+              <span><strong>Falta de rigor legal/creativo:</strong> No diferencian automáticamente entre un gancho de TikTok y una alerta de riesgo contractual crítico.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Opción 3: Nuestra Plataforma (Ganadora) -->
+        <div class="bg-slate-900 border-2 border-indigo-500/80 p-8 rounded-3xl relative shadow-2xl shadow-indigo-500/10 bg-gradient-to-b from-slate-900 via-slate-900 to-indigo-950/30">
+          <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wider">
+            Especializado & Automatizado
+          </div>
+          <div class="text-indigo-400 text-3xl mb-4">⚡</div>
+          <h4 class="text-xl font-bold text-white mb-2">ClipGenius & AuditAI</h4>
+          <p class="text-indigo-300/80 text-xs mb-6">Plataforma SaaS con Prompts de Grado Industrial.</p>
+          <ul class="text-sm text-slate-200 space-y-4">
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 font-bold">✓</span>
+              <span><strong>Analítica lista en 15 segundos:</strong> Procesamiento instantáneo formateado exactamente según lo que necesitas consumir o publicar.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 font-bold">✓</span>
+              <span><strong>Arquitectura de Prompts Serverless:</strong> Instrucciones de sistema ultra-específicas integradas en el servidor que diferencian cada plan.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 font-bold">✓</span>
+              <span><strong>Matriz de Alerta de Riesgos & Viral Hooks:</strong> Clasificación cromática (🔴🟡🟢) de contratos y timestamps [MM:SS] optimizados para enganchar audiencias.</span>
+            </li>
+          </ul>
+        </div>
+
       </div>
     </div>
   </section>
@@ -93,7 +175,7 @@
     <div class="max-w-7xl mx-auto">
       <div class="text-center max-w-3xl mx-auto mb-16">
         <h3 class="text-3xl md:text-5xl font-black tracking-tight mb-4">Dos mundos. Una sola plataforma de alto rendimiento.</h3>
-        <p class="text-slate-400">Ya sea que busques dominar las redes sociales con clips virales o blindar legalmente los contratos de tu empresa.</p>
+        <p class="text-slate-400">Diseñada para potenciar las redes sociales de creadores y blindar los contratos de empresas.</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -138,7 +220,7 @@
     </div>
   </section>
 
-  <!-- Sección: Cómo Funciona (Para Personas Normales y Empresas) -->
+  <!-- Sección: Cómo Funciona -->
   <section id="como-funciona" class="py-24 px-6 border-t border-slate-900">
     <div class="max-w-7xl mx-auto">
       <div class="text-center max-w-3xl mx-auto mb-16">
@@ -205,7 +287,7 @@
       </div>
     </div>
 
-    <!-- CARD 2: CONSOLA DE IA (PROTEGIDA - Se muestra ÚNICAMENTE con sesión activa) -->
+    <!-- CARD 2: CONSOLA DE IA (PROTEGIDA) -->
     <div id="consoleCard" class="hidden bg-slate-900 border border-indigo-500/40 rounded-3xl p-8 md:p-10 shadow-2xl relative overflow-hidden">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-6 border-b border-slate-800 mb-8 gap-4">
         <div>
@@ -335,7 +417,7 @@
     </div>
   </section>
 
-  <!-- Footer Extenso -->
+  <!-- Footer -->
   <footer class="border-t border-slate-900 py-16 px-6 bg-slate-950">
     <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 mb-12 text-sm text-slate-400">
       <div>
