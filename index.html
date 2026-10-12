@@ -9,7 +9,7 @@
   <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
   <style>
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(15px); }
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
     .animate-fade-in {
@@ -19,28 +19,31 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
 
-  <!-- Header / Navbar -->
-  <header class="border-b border-slate-800/80 p-4 sticky top-0 bg-slate-950/80 backdrop-blur-md z-50">
+  <!-- Header / Navbar Fijo -->
+  <header class="border-b border-slate-800/80 p-4 sticky top-0 bg-slate-950/90 backdrop-blur-md z-50">
     <div class="max-w-6xl mx-auto flex justify-between items-center w-full">
-      <h1 class="text-xl font-extrabold flex items-center gap-2 cursor-pointer" onclick="showSection('landing-section')">
+      <h1 class="text-xl font-extrabold flex items-center gap-2 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
         <span class="text-indigo-500">⚡</span> ClipGenius & AuditAI
       </h1>
-      <div class="flex items-center gap-4">
-        <button onclick="showSection('pricing-section')" class="text-sm text-slate-300 hover:text-white transition">Planes</button>
-        <button onclick="showSection('pricing-section')" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2 rounded-xl transition shadow-lg shadow-indigo-600/20">
-          Suscribirme
-        </button>
-      </div>
+      <nav class="hidden md:flex items-center gap-6 text-sm text-slate-400">
+        <a href="#como-funciona" class="hover:text-white transition">Cómo funciona</a>
+        <a href="#beneficios" class="hover:text-white transition">Beneficios</a>
+        <a href="#faq" class="hover:text-white transition">FAQ</a>
+        <a href="#planes" class="hover:text-white transition">Precios</a>
+      </nav>
+      <a href="#planes" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2 rounded-xl transition shadow-lg shadow-indigo-600/20">
+        Comenzar Ahora
+      </a>
     </div>
   </header>
 
-  <main class="flex-1 flex flex-col items-center justify-center w-full">
+  <main class="flex-1 flex flex-col items-center w-full">
     
-    <!-- 1. SECCIÓN DE INTRODUCCIÓN (LANDING PAGE) -->
-    <div id="landing-section" class="w-full max-w-6xl px-6 py-16 flex flex-col items-center text-center animate-fade-in">
+    <!-- 1. HERO / PRESENTACIÓN PRINCIPAL -->
+    <section class="w-full max-w-6xl px-6 pt-20 pb-24 flex flex-col items-center text-center animate-fade-in">
       
       <!-- Badge superior -->
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-950/60 border border-indigo-800/60 text-indigo-300 text-xs font-mono mb-6 shadow-inner">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-950/60 border border-indigo-800/60 text-indigo-300 text-xs font-mono mb-6 shadow-inner">
         <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
         Potenciado por Google Gemini Flash IA
       </div>
@@ -52,115 +55,188 @@
 
       <!-- Subtítulo -->
       <p class="text-slate-400 text-base md:text-lg max-w-2xl mt-6 leading-relaxed">
-        Extrae marcas de tiempo automáticas, genera resúmenes ejecutivos precisos y audita contratos masivos en segundos. Diseñado para creadores de contenido, editores y empresas globales.
+        Extrae marcas de tiempo automáticas, genera resúmenes ejecutivos precisos y audita contratos masivos en segundos. Diseñado para creadores, editores y empresas.
       </p>
 
       <!-- Botones de Acción -->
       <div class="flex flex-col sm:flex-row gap-4 mt-10 w-full justify-center">
-        <button onclick="showSection('pricing-section')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-8 py-4 rounded-2xl transition shadow-xl shadow-indigo-600/30 flex items-center justify-center gap-2 group">
+        <a href="#planes" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-8 py-4 rounded-2xl transition shadow-xl shadow-indigo-600/30 flex items-center justify-center gap-2 group">
           Explorar Planes y Precios
           <span class="group-hover:translate-x-1 transition">→</span>
-        </button>
-        <button onclick="showSection('pricing-section')" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 font-semibold px-8 py-4 rounded-2xl transition">
-          Probar Herramienta
-        </button>
+        </a>
+        <a href="#como-funciona" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 font-semibold px-8 py-4 rounded-2xl transition">
+          Ver cómo funciona
+        </a>
       </div>
 
-      <!-- Tarjetas de Características Destacadas -->
-      <div class="grid md:grid-cols-3 gap-6 w-full mt-24 text-left">
-        <div class="bg-slate-900/60 border border-slate-800/80 p-6 rounded-2xl backdrop-blur-sm hover:border-indigo-500/50 transition group">
-          <div class="w-10 h-10 rounded-xl bg-indigo-950 text-indigo-400 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">⚡</div>
-          <h3 class="text-lg font-bold text-white mb-2">ClipGenius Multimedia</h3>
-          <p class="text-slate-400 text-xs leading-relaxed">Procesa videos y audios largos, obteniendo marcas de tiempo exactas y cortes optimizados automáticamente para redes sociales.</p>
-        </div>
-
-        <div class="bg-slate-900/60 border border-slate-800/80 p-6 rounded-2xl backdrop-blur-sm hover:border-indigo-500/50 transition group">
-          <div class="w-10 h-10 rounded-xl bg-emerald-950 text-emerald-400 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">🛡️</div>
-          <h3 class="text-lg font-bold text-white mb-2">AuditAI Contratos</h3>
-          <p class="text-slate-400 text-xs leading-relaxed">Analiza PDFs y documentos legales de forma masiva. Detecta cláusulas ocultas, riesgos y puntos clave en cuestión de segundos.</p>
-        </div>
-
-        <div class="bg-slate-900/60 border border-slate-800/80 p-6 rounded-2xl backdrop-blur-sm hover:border-indigo-500/50 transition group">
-          <div class="w-10 h-10 rounded-xl bg-purple-950 text-purple-400 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">🚀</div>
-          <h3 class="text-lg font-bold text-white mb-2">Velocidad Extrema</h3>
-          <p class="text-slate-400 text-xs leading-relaxed">Infraestructura ultra rápida en la nube respaldada por Vercel y pagos seguros internacionales mediante pasarela certificada.</p>
-        </div>
+      <!-- Indicador de Scroll hacia abajo -->
+      <div class="mt-16 animate-bounce text-slate-500 text-xs flex flex-col items-center gap-2">
+        <span>Desliza para descubrir más</span>
+        <span>↓</span>
       </div>
+    </section>
 
-    </div>
+    <!-- 2. CARACTERÍSTICAS DESTACADAS -->
+    <section id="beneficios" class="w-full bg-slate-900/40 border-y border-slate-800/80 py-20 px-6">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl font-extrabold text-white">Potencia y Precisión en un Solo Lugar</h2>
+          <p class="text-slate-400 text-sm mt-2">Dos módulos avanzados integrados para simplificar tu flujo de trabajo</p>
+        </div>
 
-
-    <!-- 2. SECCIÓN DE PLANES Y PRECIOS (PAYWALL) -->
-    <div id="pricing-section" class="w-full max-w-5xl px-6 py-16 hidden animate-fade-in">
-      <div class="text-center mb-12">
-        <button onclick="showSection('landing-section')" class="text-xs text-indigo-400 hover:text-indigo-300 mb-4 inline-flex items-center gap-1">
-          ← Volver al inicio
-        </button>
-        <h2 class="text-3xl font-extrabold text-white">Planes adaptados a tus necesidades</h2>
-        <p class="text-slate-400 text-sm mt-2">Elige tu plan en pesos chilenos (CLP) o equivalente global</p>
-      </div>
-
-      <div class="grid md:grid-cols-3 gap-6">
-        <!-- Básico -->
-        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between hover:border-slate-700 transition shadow-xl">
-          <div>
-            <h3 class="text-lg font-bold text-slate-200">Básico</h3>
-            <p class="text-3xl font-extrabold my-4 text-white">$10.000 <span class="text-xs font-normal text-slate-400">CLP / mes</span></p>
-            <ul class="text-xs text-slate-300 space-y-2 mb-6">
-              <li>✔ 15 análisis de video o audio al mes</li>
-              <li>✔ Marcas de tiempo automáticas</li>
-              <li>✔ Resúmenes ejecutivos</li>
-              <li>✔ Videos de hasta 30 minutos</li>
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="bg-slate-900/80 border border-slate-800 p-8 rounded-2xl hover:border-indigo-500/50 transition group shadow-xl">
+            <div class="w-12 h-12 rounded-xl bg-indigo-950 text-indigo-400 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition">⚡</div>
+            <h3 class="text-xl font-bold text-white mb-3">ClipGenius Multimedia</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-4">Procesa automáticamente archivos de audio y video largos.</p>
+            <ul class="text-xs text-slate-300 space-y-2 border-t border-slate-800 pt-4">
+              <li>✔ Generación de marcas de tiempo automáticas</li>
+              <li>✔ Resúmenes de puntos clave</li>
+              <li>✔ Detección de momentos para Reels/Shorts</li>
             </ul>
           </div>
-          <button onclick="subscribeWithPaddle('pri_01m4pbt2be8869nvtkywdqc7g0')" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold py-2.5 rounded-xl transition">
-            Elegir Básico
-          </button>
-        </div>
 
-        <!-- Pro Creador -->
-        <div class="bg-slate-900 border-2 border-indigo-500 p-6 rounded-2xl flex flex-col justify-between relative shadow-2xl shadow-indigo-500/10">
-          <span class="absolute -top-3 right-6 bg-indigo-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">Más Popular</span>
-          <div>
-            <h3 class="text-lg font-bold text-indigo-400">Pro Creador</h3>
-            <p class="text-3xl font-extrabold my-4 text-white">$20.000 <span class="text-xs font-normal text-slate-400">CLP / mes</span></p>
-            <ul class="text-xs text-slate-300 space-y-2 mb-6">
-              <li>✔ Análisis ilimitados de video y audio</li>
-              <li>✔ Videos pesados sin límite de duración</li>
-              <li>✔ Exportación de marcas de tiempo y guiones</li>
-              <li>✔ Procesamiento prioritario con Gemini</li>
+          <div class="bg-slate-900/80 border border-slate-800 p-8 rounded-2xl hover:border-emerald-500/50 transition group shadow-xl">
+            <div class="w-12 h-12 rounded-xl bg-emerald-950 text-emerald-400 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition">🛡️</div>
+            <h3 class="text-xl font-bold text-white mb-3">AuditAI Contratos</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-4">Analiza grandes volúmenes de documentos legales y contractuales.</p>
+            <ul class="text-xs text-slate-300 space-y-2 border-t border-slate-800 pt-4">
+              <li>✔ Detección de cláusulas de riesgo</li>
+              <li>✔ Auditoría rápida de PDFs de +100 páginas</li>
+              <li>✔ Comparación de términos legales</li>
             </ul>
           </div>
-          <button onclick="subscribeWithPaddle('pri_01m4pbvp9fepa4dzn7bc4vhgep')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl transition shadow-lg shadow-indigo-600/30">
-            Elegir Pro
-          </button>
-        </div>
 
-        <!-- Business -->
-        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between hover:border-slate-700 transition shadow-xl">
-          <div>
-            <h3 class="text-lg font-bold text-emerald-400">Business / AuditAI</h3>
-            <p class="text-3xl font-extrabold my-4 text-white">$35.000 <span class="text-xs font-normal text-slate-400">CLP / mes</span></p>
-            <ul class="text-xs text-slate-300 space-y-2 mb-6">
-              <li>✔ Todo lo del Plan Pro</li>
-              <li>✔ Auditoría masiva de PDFs y Contratos</li>
-              <li>✔ Detección de cláusulas y riesgos</li>
-              <li>✔ Soporte directo y personalizado</li>
+          <div class="bg-slate-900/80 border border-slate-800 p-8 rounded-2xl hover:border-purple-500/50 transition group shadow-xl">
+            <div class="w-12 h-12 rounded-xl bg-purple-950 text-purple-400 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition">🚀</div>
+            <h3 class="text-xl font-bold text-white mb-3">Infraestructura Pro</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-4">Velocidad garantizada con servidores optimizados de alta capacidad.</p>
+            <ul class="text-xs text-slate-300 space-y-2 border-t border-slate-800 pt-4">
+              <li>✔ Procesamiento en la nube sin ralentizar tu PC</li>
+              <li>✔ Archivos 100% privados y encriptados</li>
+              <li>✔ Integración directa con Paddle Billing</li>
             </ul>
           </div>
-          <button onclick="subscribeWithPaddle('pri_01m4pbyh5jjsg4evyhsf4c5a9s')" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold py-2.5 rounded-xl transition">
-            Elegir Business
-          </button>
         </div>
       </div>
-    </div>
+    </section>
 
+    <!-- 3. SECCIÓN CÓMO FUNCIONA (PASO A PASO) -->
+    <section id="como-funciona" class="w-full max-w-6xl px-6 py-24 text-center">
+      <h2 class="text-3xl font-extrabold text-white mb-4">¿Cómo funciona?</h2>
+      <p class="text-slate-400 text-sm mb-16 max-w-xl mx-auto">Obtén resultados profesionales en 3 simples pasos sin configuraciones complejas.</p>
 
-    <!-- 3. SECCIÓN DEL ANALIZADOR (Se habilita tras el pago) -->
-    <div id="analyzer-card" class="w-full max-w-2xl px-6 py-16 hidden animate-fade-in">
+      <div class="grid md:grid-cols-3 gap-8 relative">
+        <div class="bg-slate-900 border border-slate-800 p-8 rounded-2xl flex flex-col items-center relative">
+          <span class="w-10 h-10 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-sm mb-4">1</span>
+          <h3 class="text-lg font-bold text-white mb-2">Sube tu archivo</h3>
+          <p class="text-slate-400 text-xs leading-relaxed">Selecciona tu video, audio (MP4, MP3) o documento PDF desde tu computadora.</p>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 p-8 rounded-2xl flex flex-col items-center relative">
+          <span class="w-10 h-10 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-sm mb-4">2</span>
+          <h3 class="text-lg font-bold text-white mb-2">Procesamiento IA</h3>
+          <p class="text-slate-400 text-xs leading-relaxed">Nuestra red neuronal analiza multimodalmente cada segundo o párrafo del contenido.</p>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 p-8 rounded-2xl flex flex-col items-center relative">
+          <span class="w-10 h-10 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-sm mb-4">3</span>
+          <h3 class="text-lg font-bold text-white mb-2">Recibe tus Resultados</h3>
+          <p class="text-slate-400 text-xs leading-relaxed">Copia los resúmenes, marcas de tiempo o alertas de riesgos directamente a tu proyecto.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. SECCIÓN DE PLANES Y PRECIOS (PAYWALL) -->
+    <section id="planes" class="w-full bg-slate-900/30 border-t border-slate-800/80 py-24 px-6">
+      <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl font-extrabold text-white">Planes adaptados a tus necesidades</h2>
+          <p class="text-slate-400 text-sm mt-2">Suscripciones transparentes en pesos chilenos (CLP) o equivalente internacional</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6">
+          
+          <!-- Plan Básico -->
+          <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between hover:border-slate-700 transition shadow-xl">
+            <div>
+              <h3 class="text-lg font-bold text-slate-200">Básico</h3>
+              <p class="text-3xl font-extrabold my-4 text-white">$10.000 <span class="text-xs font-normal text-slate-400">CLP / mes</span></p>
+              <ul class="text-xs text-slate-300 space-y-2 mb-6">
+                <li>✔ 15 análisis de video o audio al mes</li>
+                <li>✔ Marcas de tiempo automáticas</li>
+                <li>✔ Resúmenes ejecutivos</li>
+                <li>✔ Videos de hasta 30 minutos</li>
+              </ul>
+            </div>
+            <button onclick="subscribeWithPaddle('pri_01m4pbt2be8869nvtkywdqc7g0')" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold py-2.5 rounded-xl transition">
+              Elegir Básico
+            </button>
+          </div>
+
+          <!-- Plan Pro Creador -->
+          <div class="bg-slate-900 border-2 border-indigo-500 p-6 rounded-2xl flex flex-col justify-between relative shadow-2xl shadow-indigo-500/10">
+            <span class="absolute -top-3 right-6 bg-indigo-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">Más Popular</span>
+            <div>
+              <h3 class="text-lg font-bold text-indigo-400">Pro Creador</h3>
+              <p class="text-3xl font-extrabold my-4 text-white">$20.000 <span class="text-xs font-normal text-slate-400">CLP / mes</span></p>
+              <ul class="text-xs text-slate-300 space-y-2 mb-6">
+                <li>✔ Análisis ilimitados de video y audio</li>
+                <li>✔ Videos pesados sin límite de duración</li>
+                <li>✔ Exportación de marcas de tiempo y guiones</li>
+                <li>✔ Procesamiento prioritario con Gemini</li>
+              </ul>
+            </div>
+            <button onclick="subscribeWithPaddle('pri_01m4pbvp9fepa4dzn7bc4vhgep')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl transition shadow-lg shadow-indigo-600/30">
+              Elegir Pro
+            </button>
+          </div>
+
+          <!-- Plan Business AuditAI -->
+          <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between hover:border-slate-700 transition shadow-xl">
+            <div>
+              <h3 class="text-lg font-bold text-emerald-400">Business / AuditAI</h3>
+              <p class="text-3xl font-extrabold my-4 text-white">$35.000 <span class="text-xs font-normal text-slate-400">CLP / mes</span></p>
+              <ul class="text-xs text-slate-300 space-y-2 mb-6">
+                <li>✔ Todo lo del Plan Pro</li>
+                <li>✔ Auditoría masiva de PDFs y Contratos</li>
+                <li>✔ Detección de cláusulas y riesgos</li>
+                <li>✔ Soporte directo y personalizado</li>
+              </ul>
+            </div>
+            <button onclick="subscribeWithPaddle('pri_01m4pbyh5jjsg4evyhsf4c5a9s')" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold py-2.5 rounded-xl transition">
+              Elegir Business
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. PREGUNTAS FRECUENTES (FAQ) -->
+    <section id="faq" class="w-full max-w-4xl px-6 py-20">
+      <h2 class="text-3xl font-extrabold text-white text-center mb-12">Preguntas Frecuentes</h2>
+      <div class="space-y-6">
+        <div class="bg-slate-900 border border-slate-800 p-6 rounded-xl">
+          <h3 class="font-bold text-white text-base">¿Qué métodos de pago son aceptados?</h3>
+          <p class="text-slate-400 text-xs mt-2">Aceptamos tarjetas de crédito/débito internacionales, PayPal y Google Pay mediante la pasarela segura de Paddle.</p>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 p-6 rounded-xl">
+          <h3 class="font-bold text-white text-base">¿Se guardan mis videos o documentos?</h3>
+          <p class="text-slate-400 text-xs mt-2">No. Todos los archivos se procesan de forma temporal en la memoria volátil de la IA y se eliminan una vez generado el informe.</p>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 p-6 rounded-xl">
+          <h3 class="font-bold text-white text-base">¿Puedo cancelar mi suscripción cuando quiera?</h3>
+          <p class="text-slate-400 text-xs mt-2">Sí, puedes cancelar en cualquier momento desde tu correo de confirmación de Paddle sin penalizaciones ni contratos a largo plazo.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. SECCIÓN DEL ANALIZADOR (Oculta hasta pagar) -->
+    <div id="analyzer-card" class="w-full max-w-2xl px-6 py-16 hidden">
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl space-y-6">
         <div class="text-center">
-          <h2 class="text-2xl font-bold">Analizador Multimodal Pro</h2>
+          <h2 class="text-2xl font-bold text-white">Analizador Multimodal Pro</h2>
           <p class="text-slate-400 text-sm mt-1">Sube tu video o documento para procesar con IA.</p>
         </div>
 
@@ -181,17 +257,11 @@
 
   </main>
 
+  <footer class="border-t border-slate-800/80 w-full py-8 text-center text-xs text-slate-500">
+    <p>© 2026 ClipGenius & AuditAI. Todos los derechos reservados.</p>
+  </footer>
+
   <script>
-    // Control de navegación entre secciones
-    function showSection(sectionId) {
-      document.getElementById('landing-section').classList.add('hidden');
-      document.getElementById('pricing-section').classList.add('hidden');
-      document.getElementById('analyzer-card').classList.add('hidden');
-
-      document.getElementById(sectionId).classList.remove('hidden');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
     // Inicialización Paddle v2
     document.addEventListener("DOMContentLoaded", async function() {
       if (typeof Paddle !== 'undefined') {
@@ -216,8 +286,9 @@
         settings: {
           successCallback: function(data) {
             alert("¡Suscripción realizada con éxito!");
-            document.getElementById('pricing-section').classList.add('hidden');
+            // Mostrar tarjeta del analizador
             document.getElementById('analyzer-card').classList.remove('hidden');
+            window.location.hash = "analyzer-card";
           }
         }
       });
