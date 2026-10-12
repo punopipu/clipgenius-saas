@@ -550,11 +550,41 @@
     });
 
     // -------------------------------------------------------------
-    // FUNCIÓN DE COBRO EN VIVO DIRECTO DE PADDLE (Sencillo y sin bloqueos)
+    // INICIALIZACIÓN OFICIAL DE PADDLE V2
+    // -------------------------------------------------------------
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof Paddle !== 'undefined') {
+        try {
+          Paddle.Initialize({ 
+            token: "live_db6ecf4e8829d5e525d6b07ecbf"
+          });
+        } catch (err) {
+          console.error("Error al inicializar Paddle:", err);
+        }
+      }
+    });
+
+    // -------------------------------------------------------------
+    // APERTURA DEL CHECKOUT MODAL DE PADDLE V2
     // -------------------------------------------------------------
     function subscribeWithPaddle(priceId) {
-      // Redirige al checkout directo de Paddle evitando restricciones de dominio en modal
-      window.location.href = `https://buy.paddle.com/checkout/custom?items[0][price_id]=${priceId}&items[0][quantity]=1`;
+      if (typeof Paddle === 'undefined') {
+        alert("La pasarela de pago está cargando. Por favor reintenta en un momento.");
+        return;
+      }
+
+      Paddle.Checkout.open({
+        items: [
+          {
+            priceId: priceId,
+            quantity: 1
+          }
+        ],
+        settings: {
+          displayMode: "overlay",
+          theme: "dark"
+        }
+      });
     }
 
     // -------------------------------------------------------------
