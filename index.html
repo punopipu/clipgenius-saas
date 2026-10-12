@@ -29,14 +29,14 @@
         <a href="#app-area" class="hover:text-white transition">Consola IA</a>
       </nav>
       
-      <!-- Estado de Autenticación Rápida -->
+      <!-- Botones Rápidos de Autenticación -->
       <div id="authHeaderButtons" class="flex items-center gap-3">
-        <a href="#app-area" onclick="document.getElementById('authCard').scrollIntoView({behavior: 'smooth'})" class="text-xs font-semibold text-slate-300 hover:text-white px-3 py-2 transition">
+        <button onclick="scrollAndSetAuth(true)" class="text-xs font-semibold text-slate-300 hover:text-white px-3 py-2 transition">
           Iniciar Sesión
-        </a>
-        <a href="#planes" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2.5 rounded-full transition shadow-lg shadow-indigo-600/25">
-          Ver Planes
-        </a>
+        </button>
+        <button onclick="scrollAndSetAuth(false)" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2.5 rounded-full transition shadow-lg shadow-indigo-600/25">
+          Registrarse
+        </button>
       </div>
     </div>
   </header>
@@ -88,7 +88,7 @@
     </div>
   </section>
 
-  <!-- NUEVA SECCIÓN ESTRATÉGICA: ¿POR QUÉ ES MEJOR QUE EL TRABAJO MANUAL O IAs CONVENCIONALES? -->
+  <!-- SECCIÓN ESTRATÉGICA: ¿POR QUÉ ES MEJOR QUE EL TRABAJO MANUAL O IAs CONVENCIONALES? -->
   <section id="por-que-nosotros" class="py-24 px-6 border-t border-slate-900 bg-slate-950/80 relative">
     <div class="max-w-7xl mx-auto">
       <div class="text-center max-w-3xl mx-auto mb-16">
@@ -97,7 +97,6 @@
         <p class="text-slate-400">Compara el rendimiento directo frente al trabajo humano manual y a los chats de inteligencia artificial genéricos.</p>
       </div>
 
-      <!-- Tabla Comparativa Visual -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
         
         <!-- Opción 1: Trabajo Manual -->
@@ -142,7 +141,7 @@
           </ul>
         </div>
 
-        <!-- Opción 3: Nuestra Plataforma (Ganadora) -->
+        <!-- Opción 3: Nuestra Plataforma (Especializada) -->
         <div class="bg-slate-900 border-2 border-indigo-500/80 p-8 rounded-3xl relative shadow-2xl shadow-indigo-500/10 bg-gradient-to-b from-slate-900 via-slate-900 to-indigo-950/30">
           <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wider">
             Especializado & Automatizado
@@ -257,7 +256,7 @@
   <!-- Sección Interactiva de Autenticación y Consola Protegida -->
   <section id="app-area" class="py-24 px-6 max-w-4xl mx-auto">
     
-    <!-- CARD 1: FORMULARIO DE LOGIN / REGISTRO OBLIGATORIO -->
+    <!-- CARD 1: FORMULARIO DE LOGIN / REGISTRO (CON CAMBIO DINÁMICO) -->
     <div id="authCard" class="bg-slate-900 border border-slate-800 rounded-3xl p-8 md:p-12 shadow-2xl">
       <div class="text-center mb-8">
         <span class="text-xs font-semibold text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20 uppercase tracking-widest">Seguridad Estricta</span>
@@ -457,7 +456,7 @@
     </div>
   </footer>
 
-  <!-- Lógica de Autenticación y Frontend Protegido -->
+  <!-- Lógica de Autenticación y Frontend Protegido (CORREGIDO) -->
   <script>
     // Configura con tus credenciales reales de Supabase
     const SUPABASE_URL = "https://TU_PROYECTO.supabase.co";
@@ -466,14 +465,37 @@
 
     let isLoginMode = true;
 
+    // Alternar entre modo Login y Registro
     function toggleAuthMode() {
-      isLoginMode = !isLoginMode;
-      document.getElementById('authTitle').innerText = isLoginMode ? 'Iniciar Sesión en la Plataforma' : 'Crear Cuenta Nueva';
-      document.getElementById('btnAuthSubmit').innerText = isLoginMode ? 'Ingresar a la Plataforma' : 'Registrarse';
-      document.getElementById('btnToggleAuth').innerText = isLoginMode ? '¿No tienes cuenta? Regístrate aquí mismo' : '¿Ya tienes cuenta? Inicia sesión';
+      setAuthMode(!isLoginMode);
     }
 
-    // Monitorear estado de sesión
+    function setAuthMode(loginState) {
+      isLoginMode = loginState;
+      const authTitle = document.getElementById('authTitle');
+      const authSubtitle = document.getElementById('authSubtitle');
+      const btnAuthSubmit = document.getElementById('btnAuthSubmit');
+      const btnToggleAuth = document.getElementById('btnToggleAuth');
+
+      if (isLoginMode) {
+        authTitle.innerText = 'Iniciar Sesión en la Plataforma';
+        authSubtitle.innerText = 'El acceso al motor de Gemini 2.0 requiere autenticación obligatoria.';
+        btnAuthSubmit.innerText = 'Ingresar a la Plataforma';
+        btnToggleAuth.innerText = '¿No tienes cuenta? Regístrate aquí mismo';
+      } else {
+        authTitle.innerText = 'Crear Cuenta Nueva';
+        authSubtitle.innerText = 'Ingresa tu correo y una contraseña para registrarte en la plataforma.';
+        btnAuthSubmit.innerText = 'Crear Mi Cuenta';
+        btnToggleAuth.innerText = '¿Ya tienes una cuenta? Inicia sesión aquí';
+      }
+    }
+
+    function scrollAndSetAuth(loginState) {
+      setAuthMode(loginState);
+      document.getElementById('authCard').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Monitorear estado de sesión al cargar la página
     window.addEventListener('load', async () => {
       const { data: { session } } = await supabase.auth.getSession();
       updateUI(session);
