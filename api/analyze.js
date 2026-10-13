@@ -18,6 +18,7 @@ const SYSTEM_PROMPTS = {
 };
 
 module.exports = async function handler(req, res) {
+  // Manejo de cabeceras CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -42,6 +43,7 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'No se envió texto para analizar.' });
     }
 
+    // Lee la API Key guardada en las variables de entorno de Vercel
     const apiKey = process.env.GEMINI_API_KEY;
     
     if (!apiKey) {
@@ -51,7 +53,8 @@ module.exports = async function handler(req, res) {
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    // Configurado con el modelo que elegiste en Google AI Studio
+    const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash-lite" });
 
     const promptSeleccionado = SYSTEM_PROMPTS.pro;
 
