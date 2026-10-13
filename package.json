@@ -1,0 +1,9 @@
+{
+  "name": "clipgenius-auditai",
+  "version": "1.0.0",
+  "description": "SaaS de análisis multimedia y auditoría en Chile",
+  "main": "api/analyze.js",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1"
+  }
+}
