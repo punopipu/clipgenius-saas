@@ -1,36 +1,72 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const SYSTEM_PROMPTS = {
-  basic: `Eres ClipGenius AI (Plan Básico). Resumen ejecutivo corto, 3-5 timestamps [MM:SS] principales y 3 conclusiones clave.`,
-  pro: `Eres ClipGenius AI (Plan Pro Creador). Genera capítulos detallados con timestamps, 3-5 ganchos virales para Shorts/Reels/TikToks y kit para redes sociales.`,
-  business: `Eres AuditAI Enterprise. Realiza auditoría de riesgos (🔴 Alto, 🟡 Medio, 🟢 Bajo), desglose financiero y minutas de acuerdos.`
+  basic: `Eres ClipGenius AI (Plan Básico). Genera:
+  1. Resumen ejecutivo de 1 párrafo.
+  2. 3 a 5 marcas de tiempo [MM:SS] principales.
+  3. 3 conclusiones clave.`,
+
+  pro: `Eres ClipGenius AI (Plan Pro Creador). Genera:
+  1. Desglose completo por capítulos con timestamps [MM:SS].
+  2. 3 a 5 Viral Hooks para Shorts/Reels/TikTok.
+  3. Kit para redes sociales (títulos, descripción y hashtags).`,
+
+  business: `Eres AuditAI Enterprise. Genera:
+  1. Resumen ejecutivo formal.
+  2. Matriz de Alerta de Riesgos (🔴 Alto, 🟡 Medio, 🟢 Favorable).
+  3. Desglose financiero y minutas con responsables.`
 };
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization'
+  );
+
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método no permitido' });
+    return res.status(405).json({ error: 'Método no permitido. Usa POST.' });
   }
 
   try {
-    const { userPlan, fileData, mimeType } = req.body;
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const { textData } = req.body || {};
+
+    if (!textData) {
+      return res.status(400).json({ error: 'No se envió texto para analizar.' });
+    }
+
+    const apiKey = process.env.GEMINI_API_KEY;
+    
+    if (!apiKey) {
+      return res.status(500).json({ 
+        error: 'Falta la variable GEMINI_API_KEY en Vercel. Ve a Settings > Environment Variables e agrégala.' 
+      });
+    }
+
+    const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
-    const promptSeleccionado = SYSTEM_PROMPTS[userPlan] || SYSTEM_PROMPTS.basic;
+    const promptSeleccionado = SYSTEM_PROMPTS.pro;
 
     const result = await model.generateContent([
       promptSeleccionado,
-      {
-        inlineData: {
-          data: fileData,
-          mimeType: mimeType
-        }
-      }
+      textData
     ]);
 
     const response = await result.response;
     return res.status(200).json({ success: true, analysis: response.text() });
+
   } catch (error) {
-    return res.status(500).json({ error: "Ocurrió un error al procesar el archivo." });
+    console.error("Error en backend Vercel:", error);
+    return res.status(500).json({ 
+      error: 'Error al procesar con Gemini: ' + (error.message || 'Fallo interno') 
+    });
   }
-}
+};
