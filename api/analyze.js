@@ -1,7 +1,6 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-const { createClient } = require("@supabase/supabase-js");
 
-// Prompts del Sistema según el Nivel de Suscripción
+// Prompts del Sistema según el Nivel de Suscripción Seleccionado
 const SYSTEM_PROMPTS = {
   basic: `Eres ClipGenius AI (Plan Básico).
   Tu objetivo es entregar una síntesis rápida y esencial.
@@ -28,12 +27,8 @@ const SYSTEM_PROMPTS = {
   3. 📋 Plan de Acción Recomendado antes de firmar.`
 };
 
-// Credenciales de Supabase para validar usuarios en el servidor
-const SUPABASE_URL = process.env.SUPABASE_URL || "https://TU_PROYECTO.supabase.co";
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "TU_SERVICE_ROLE_KEY";
-
 module.exports = async function handler(req, res) {
-  // Configuración de CORS
+  // Manejo de CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -51,7 +46,7 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const { textData } = req.body || {};
+    const { textData, plan } = req.body || {};
 
     if (!textData || !textData.trim()) {
       return res.status(400).json({ error: 'No se envió texto para analizar.' });
@@ -60,44 +55,13 @@ module.exports = async function handler(req, res) {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
       return res.status(500).json({ 
-        error: 'Falta la variable GEMINI_API_KEY en Vercel.' 
+        error: 'Falta la variable GEMINI_API_KEY en Vercel. Ve a Settings > Environment Variables y agrégala.' 
       });
     }
 
-    // --- VALIDACIÓN DE PLAN DEL USUARIO ---
-    let planUsuario = "pro"; // Plan por defecto para pruebas si no hay Supabase aún
-
-    const authHeader = req.headers.authorization;
-    if (authHeader && SUPABASE_URL.indexOf('TU_PROYECTO') === -1) {
-      const token = authHeader.replace('Bearer ', '');
-      const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-
-      // Verificar el usuario con el token recibido desde el frontend
-      const { data: { user }, error: userError } = await supabase.auth.getUser(token);
-
-      if (userError || !user) {
-        return res.status(401).json({ error: 'Sesión no válida o expirada. Por favor inicia sesión nuevamente.' });
-      }
-
-      // Consultar la tabla "profiles" o los metadatos para obtener su plan
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('plan')
-        .eq('id', user.id)
-        .single();
-
-      if (profile && profile.plan) {
-        planUsuario = profile.plan; // "basic", "pro" o "business"
-      } else {
-        // Si la cuenta no tiene plan activo ni pagado
-        return res.status(403).json({ 
-          error: 'No tienes una suscripción activa. Por favor selecciona un plan en la sección de Precios para habilitar la consola.' 
-        });
-      }
-    }
-
-    // Seleccionar el Prompt de Gemini según el plan determinado
-    const promptSeleccionado = SYSTEM_PROMPTS[planUsuario] || SYSTEM_PROMPTS.pro;
+    // Selecciona el plan enviado ("basic", "pro" o "business"), por defecto usa "pro"
+    const planSeleccionado = plan && SYSTEM_PROMPTS[plan] ? plan : 'pro';
+    const promptSeleccionado = SYSTEM_PROMPTS[planSeleccionado];
 
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash-lite" });
@@ -110,7 +74,7 @@ module.exports = async function handler(req, res) {
     const response = await result.response;
     return res.status(200).json({ 
       success: true, 
-      planApplied: planUsuario,
+      planApplied: planSeleccionado,
       analysis: response.text() 
     });
 
