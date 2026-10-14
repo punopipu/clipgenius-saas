@@ -15,7 +15,7 @@ export default async function handler(req, res) {
 
   const cleanCode = accessCode.trim();
 
-  // Estructura: PLAN-TIMESTAMP_UNIX-FIRMA (Ej: BUSINESS-1760486400-a8f92c)
+  // Estructura: PLAN-TIMESTAMP_UNIX-FIRMA (Ej: BUSINESS-1792020397-62ece9)
   const codeRegex = /^(BASIC|PRO|BUSINESS)-(\d+)-([a-f0-9]{6})$/i;
   const match = cleanCode.match(codeRegex);
 
@@ -27,19 +27,37 @@ export default async function handler(req, res) {
   const timestampStr = match[2];
   const providedSignature = match[3].toLowerCase();
 
-  // 1. Validar la Firma Criptográfica SHA-256
-  const payloadToSign = `${plan}${timestampStr}${SECRET_KEY}`;
+  // Recreamos exactamente el string que se firmó
+  const planPrefix = plan + '-';
+  const payloadToSign = `${planPrefix}${timestampStr}${SECRET_KEY}`;
+  
   const expectedSignature = crypto
     .createHash('sha256')
     .update(payloadToSign)
     .digest('hex')
     .substring(0, 6);
 
+  // DEBUG LOGS (Revisa Vercel -> Logs)
+  console.log("--- DEBUG HMAC VALIDATION ---");
+  console.log("Código recibido:", cleanCode);
+  console.log("Plan extraído:", plan);
+  console.log("Timestamp extraído:", timestampStr);
+  console.log("Firma provista (Make):", providedSignature);
+  console.log("Payload usado en Node:", payloadToSign);
+  console.log("Firma calculada en Node:", expectedSignature);
+  console.log("-----------------------------");
+
   if (providedSignature !== expectedSignature) {
-    return res.status(401).json({ error: 'Código de acceso no autorizado o falsificado' });
+    return res.status(401).json({ 
+      error: 'Código de acceso no autorizado o falsificado',
+      debugInfo: {
+        providedSignature,
+        expectedSignature
+      }
+    });
   }
 
-  // 2. Validar Expiración de 30 Días
+  // Validar Expiración de 30 Días
   const creationTimestamp = parseInt(timestampStr, 10) * 1000;
   const now = Date.now();
   const daysDiff = (now - creationTimestamp) / (1000 * 60 * 60 * 24);
@@ -48,7 +66,6 @@ export default async function handler(req, res) {
     return res.status(403).json({ error: 'Tu suscripción mensual ha expirado. Por favor renovar tu plan.' });
   }
 
-  // 3. Respuesta Exitosa
   return res.status(200).json({
     success: true,
     plan: plan,
