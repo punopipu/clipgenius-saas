@@ -1,5 +1,4 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-const crypto = require("crypto");
 
 // Prompts del Sistema según el Nivel de Suscripción
 const SYSTEM_PROMPTS = {
@@ -19,34 +18,8 @@ const SYSTEM_PROMPTS = {
   3. 📋 Plan de Acción Recomendado antes de firmar.`
 };
 
-// Función para verificar la firma HMAC del código de acceso usando tu clave secreta
-function validarCodigoFirma(passcode, secretKey) {
-  const partes = passcode.split('-');
-  if (partes.length !== 3) return null;
-
-  const [plan, randomPart, signature] = partes;
-  const planLower = plan.toLowerCase();
-
-  if (!['basic', 'pro', 'business'].includes(planLower)) return null;
-  if (randomPart.length !== 6) return null;
-
-  // Recalcular el HMAC con tu clave secreta
-  const expectedSignature = crypto
-    .createHmac('sha256', secretKey)
-    .update(`${plan}-${randomPart}`)
-    .digest('hex')
-    .substring(0, 4)
-    .toUpperCase();
-
-  if (crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature))) {
-    return planLower;
-  }
-
-  return null;
-}
-
 module.exports = async function handler(req, res) {
-  // Configuración de cabeceras CORS
+  // Configuración CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -72,14 +45,26 @@ module.exports = async function handler(req, res) {
     }
 
     const cleanCode = passcode.trim().toUpperCase();
-    const secretKey = process.env.PASSCODE_SECRET || "ICKKICKKPUTUsecrito2032";
 
-    // Validar autenticidad mediante firma criptográfica
-    const planAutorizado = validarCodigoFirma(cleanCode, secretKey);
+    // REGEX ESTRICTA: Exige EXACTAMENTE el nombre del plan, un guión y 6 letras/números aleatorios
+    const basicRegex = /^BASIC-[A-Z0-9]{6}$/;
+    const proRegex = /^PRO-[A-Z0-9]{6}$/;
+    const businessRegex = /^BUSINESS-[A-Z0-9]{6}$/;
 
+    let planAutorizado = null;
+
+    if (basicRegex.test(cleanCode)) {
+      planAutorizado = "basic";
+    } else if (proRegex.test(cleanCode)) {
+      planAutorizado = "pro";
+    } else if (businessRegex.test(cleanCode)) {
+      planAutorizado = "business";
+    }
+
+    // Si NO coincide con la regla estricta de 6 caracteres aleatorios, RECHAZAR inmediatamente
     if (!planAutorizado) {
       return res.status(403).json({ 
-        error: '❌ Código inválido o falsificado. Solo son válidos los códigos legítimos enviados por correo.' 
+        error: '❌ Código inválido. Debe tener el formato PLAN-XXXXXX (ejemplo: PRO-A8X9K2).' 
       });
     }
 
