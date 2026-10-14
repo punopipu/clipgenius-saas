@@ -14,17 +14,21 @@
 
   <style>
     :root {
-      --bg-main: #090d16;
-      --bg-card: #111827;
-      --bg-input: #1f293d;
-      --primary: #38bdf8;
-      --primary-hover: #0284c7;
-      --accent: #818cf8;
+      --bg-main: #090714;
+      --bg-card: #130f26;
+      --bg-input: #1a1433;
+      --primary: #a855f7;
+      --primary-hover: #9333ea;
+      --accent: #c084fc;
+      --glow: rgba(168, 85, 247, 0.35);
       --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --border: #1e293b;
+      --text-muted: #a78bfa;
+      --text-sub: #94a3b8;
+      --border: #2d224d;
       --success: #4ade80;
       --error: #f87171;
+      --radius-large: 28px;
+      --radius-pill: 50px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
@@ -33,7 +37,7 @@
 
     /* --- BARRA DE PROGRESO DE SCROLL (Scroll-Driven Animation) --- */
     #scroll-progress {
-      position: fixed; top: 0; left: 0; width: 100%; height: 3px;
+      position: fixed; top: 0; left: 0; width: 100%; height: 4px;
       background: linear-gradient(90deg, var(--primary), var(--accent));
       transform-origin: 0%; z-index: 2000;
       animation: progress-grow linear;
@@ -48,21 +52,21 @@
     /* --- NAVBAR --- */
     header {
       position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      background: rgba(9, 13, 22, 0.85); backdrop-filter: blur(12px);
+      background: rgba(9, 7, 20, 0.85); backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border); padding: 18px 8%;
       display: flex; justify-content: space-between; align-items: center;
     }
     .logo { font-size: 20px; font-weight: 800; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 10px; }
     .logo span { color: var(--primary); }
     nav ul { display: flex; list-style: none; gap: 25px; align-items: center; }
-    nav a { color: var(--text-muted); text-decoration: none; font-weight: 500; transition: 0.2s; font-size: 14px; }
+    nav a { color: var(--text-sub); text-decoration: none; font-weight: 500; transition: 0.2s; font-size: 14px; }
     nav a:hover { color: var(--primary); }
     .btn-nav {
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      color: #fff !important; padding: 10px 22px; border-radius: 50px; font-weight: 600;
-      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3); transition: 0.3s !important;
+      background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+      color: #fff !important; padding: 10px 24px; border-radius: var(--radius-pill); font-weight: 600;
+      box-shadow: 0 4px 20px var(--glow); transition: 0.3s !important;
     }
-    .btn-nav:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(56, 189, 248, 0.5); }
+    .btn-nav:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(168, 85, 247, 0.6); }
 
     /* --- ANIMACIONES DE SCROLL (Scroll-Driven Animations con View Timeline) --- */
     .scroll-animate {
@@ -84,22 +88,22 @@
 
     /* --- HERO SECTION --- */
     .hero {
-      padding: 160px 8% 80px; text-align: center; background: radial-gradient(circle at top, rgba(56, 189, 248, 0.15) 0%, transparent 60%);
+      padding: 160px 8% 80px; text-align: center; background: radial-gradient(circle at top, rgba(168, 85, 247, 0.2) 0%, transparent 60%);
       display: flex; flex-direction: column; align-items: center;
     }
     .badge {
-      background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); color: var(--primary);
-      padding: 6px 16px; border-radius: 50px; font-size: 13px; font-weight: 600; margin-bottom: 25px; display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(168, 85, 247, 0.12); border: 1px solid rgba(168, 85, 247, 0.35); color: var(--accent);
+      padding: 8px 20px; border-radius: var(--radius-pill); font-size: 13px; font-weight: 600; margin-bottom: 25px; display: inline-flex; align-items: center; gap: 8px;
     }
     .hero h1 { font-size: 48px; font-weight: 800; line-height: 1.15; max-width: 900px; margin-bottom: 20px; }
     .hero h1 span { background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .hero p { font-size: 18px; color: var(--text-muted); max-width: 680px; margin-bottom: 35px; }
+    .hero p { font-size: 18px; color: var(--text-sub); max-width: 680px; margin-bottom: 35px; }
 
     /* --- APP CONSOLE / WORKSPACE --- */
     .app-section { padding: 40px 8% 80px; }
     .app-card {
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px;
-      padding: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); max-width: 900px; margin: 0 auto;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-large);
+      padding: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(168, 85, 247, 0.08); max-width: 900px; margin: 0 auto;
     }
     .app-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
     .app-header h2 { font-size: 22px; display: flex; align-items: center; gap: 12px; color: var(--primary); }
@@ -107,43 +111,45 @@
     
     label { font-size: 14px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; display: block; }
     input[type="text"], textarea {
-      width: 100%; padding: 14px 18px; background: var(--bg-input); border: 1px solid var(--border);
-      border-radius: 10px; color: #fff; font-size: 14px; outline: none; transition: 0.3s;
+      width: 100%; padding: 16px 20px; background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: var(--radius-pill); color: #fff; font-size: 14px; outline: none; transition: 0.3s;
     }
-    input[type="text"]:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2); }
+    textarea { border-radius: 20px; }
+    input[type="text"]:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.25); }
     
     .btn-action {
-      width: 100%; padding: 16px; background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-      color: #fff; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer;
+      width: 100%; padding: 18px; background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+      color: #fff; border: none; border-radius: var(--radius-pill); font-size: 16px; font-weight: 700; cursor: pointer;
       display: flex; justify-content: center; align-items: center; gap: 10px; transition: 0.3s;
+      box-shadow: 0 8px 25px var(--glow);
     }
-    .btn-action:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(2, 132, 199, 0.4); }
+    .btn-action:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(168, 85, 247, 0.5); }
     .btn-action:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
     #result {
-      margin-top: 30px; padding: 25px; background: var(--bg-input); border-radius: 12px;
+      margin-top: 30px; padding: 25px; background: var(--bg-input); border-radius: 20px;
       border: 1px solid var(--border); min-height: 120px; white-space: pre-wrap; font-size: 14px; word-break: break-word;
     }
     #result.error { border-color: var(--error); color: var(--error); background: rgba(248, 113, 113, 0.05); }
     #result.success { border-color: var(--success); color: var(--text-main); background: rgba(74, 222, 128, 0.05); }
 
-    /* --- SECTION BLOCKS (EXTENSO) --- */
-    .section-block { max-width: 900px; margin: 0 auto 60px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 40px; }
+    /* --- SECTION BLOCKS --- */
+    .section-block { max-width: 900px; margin: 0 auto 60px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-large); padding: 40px; }
     .section-block h2 { color: var(--primary); font-size: 24px; margin-bottom: 20px; }
-    .section-block p, .section-block li { color: var(--text-muted); font-size: 15px; margin-bottom: 12px; }
+    .section-block p, .section-block li { color: var(--text-sub); font-size: 15px; margin-bottom: 12px; }
     .section-block ul { padding-left: 20px; }
 
     /* --- TESTIMONIOS --- */
     .testimonials-section { padding: 60px 8%; max-width: 1100px; margin: 0 auto; }
     .section-title { text-align: center; margin-bottom: 40px; }
     .section-title h2 { font-size: 32px; font-weight: 800; margin-bottom: 10px; }
-    .section-title p { color: var(--text-muted); font-size: 16px; }
+    .section-title p { color: var(--text-sub); font-size: 16px; }
     .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
     .testimonial-card {
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 30px;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-large); padding: 30px;
       display: flex; flex-direction: column; justify-content: space-between;
     }
-    .testimonial-card p { color: var(--text-muted); font-size: 14px; margin-bottom: 20px; font-style: italic; }
+    .testimonial-card p { color: var(--text-sub); font-size: 14px; margin-bottom: 20px; font-style: italic; }
     .testimonial-author { font-weight: 700; color: #fff; font-size: 14px; }
     .testimonial-role { font-size: 12px; color: var(--primary); }
 
@@ -151,34 +157,34 @@
     .pricing { padding: 60px 8% 100px; max-width: 1100px; margin: 0 auto; }
     .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
     .pricing-card {
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 40px;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-large); padding: 40px;
       display: flex; flex-direction: column; justify-content: space-between; position: relative;
     }
-    .pricing-card.popular { border-color: var(--primary); box-shadow: 0 10px 30px rgba(56, 189, 248, 0.2); }
+    .pricing-card.popular { border-color: var(--primary); box-shadow: 0 10px 35px var(--glow); }
     .pricing-badge {
-      position: absolute; top: -15px; right: 25px; background: var(--primary); color: #000;
-      padding: 4px 14px; border-radius: 50px; font-size: 11px; font-weight: 800; text-transform: uppercase;
+      position: absolute; top: -15px; right: 25px; background: var(--primary); color: #fff;
+      padding: 6px 16px; border-radius: var(--radius-pill); font-size: 11px; font-weight: 800; text-transform: uppercase;
     }
     .price { font-size: 36px; font-weight: 800; margin: 20px 0; color: #fff; }
     .pricing-features { list-style: none; margin-bottom: 30px; }
-    .pricing-features li { margin-bottom: 12px; color: var(--text-muted); font-size: 14px; display: flex; align-items: center; gap: 10px; }
+    .pricing-features li { margin-bottom: 12px; color: var(--text-sub); font-size: 14px; display: flex; align-items: center; gap: 10px; }
     .pricing-features li i { color: var(--success); }
     .pricing-btn {
-      display: inline-block; padding: 14px; background: rgba(56, 189, 248, 0.1); border: 1px solid var(--primary);
-      color: var(--primary); text-decoration: none; border-radius: 10px; font-weight: bold; font-size: 14px; text-align: center; transition: 0.3s;
+      display: inline-block; padding: 14px; background: rgba(168, 85, 247, 0.12); border: 1px solid var(--primary);
+      color: var(--accent); text-decoration: none; border-radius: var(--radius-pill); font-weight: bold; font-size: 14px; text-align: center; transition: 0.3s;
     }
-    .pricing-btn:hover { background: var(--primary); color: #000; }
-    .pricing-card.popular .pricing-btn { background: var(--primary); color: #000; }
-    .pricing-card.popular .pricing-btn:hover { background: var(--primary-hover); color: #fff; }
+    .pricing-btn:hover { background: var(--primary); color: #fff; box-shadow: 0 6px 20px var(--glow); }
+    .pricing-card.popular .pricing-btn { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: #fff; }
+    .pricing-card.popular .pricing-btn:hover { box-shadow: 0 8px 25px rgba(168, 85, 247, 0.6); }
 
     /* --- FAQ --- */
     .faq { padding: 60px 8%; max-width: 800px; margin: 0 auto; }
-    .faq-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
+    .faq-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; margin-bottom: 15px; overflow: hidden; }
     .faq-question { padding: 20px 25px; font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #fff; font-size: 15px; }
-    .faq-answer { padding: 0 25px 20px; color: var(--text-muted); font-size: 14px; display: none; }
+    .faq-answer { padding: 0 25px 20px; color: var(--text-sub); font-size: 14px; display: none; }
 
     /* --- FOOTER --- */
-    footer { border-top: 1px solid var(--border); padding: 50px 8%; background: #070a12; color: var(--text-muted); font-size: 14px; text-align: center; }
+    footer { border-top: 1px solid var(--border); padding: 50px 8%; background: #05040a; color: var(--text-sub); font-size: 14px; text-align: center; }
 
     @media (max-width: 768px) {
       header { padding: 15px 5%; }
@@ -230,7 +236,7 @@
         <div>
           <label for="accessCodeInput"><i class="fa-solid fa-key"></i> Código de Acceso:</label>
           <input type="text" id="accessCodeInput" placeholder="Ej: BUSINESS-670e5b80-a8f9">
-          <span style="font-size: 11px; color: var(--text-muted); margin-top: 6px; display: block;">Válido por 30 días tras tu contratación.</span>
+          <span style="font-size: 11px; color: var(--text-sub); margin-top: 6px; display: block;">Válido por 30 días tras tu contratación.</span>
         </div>
         <div>
           <label for="contentInput"><i class="fa-solid fa-file-lines"></i> Texto / Transcripción a Analizar:</label>
@@ -304,8 +310,8 @@
       <div class="pricing-card">
         <div>
           <h3>Plan Básico</h3>
-          <p style="color: var(--text-muted); font-size: 13px;">Para creadores individuales</p>
-          <div class="price">$10.000 <span style="font-size: 14px; color: var(--text-muted)">CLP</span></div>
+          <p style="color: var(--text-sub); font-size: 13px;">Para creadores individuales</p>
+          <div class="price">$10.000 <span style="font-size: 14px; color: var(--text-sub)">CLP</span></div>
           <ul class="pricing-features">
             <li><i class="fa-solid fa-check"></i> Resúmenes ejecutivos cortos</li>
             <li><i class="fa-solid fa-check"></i> Extracción de 3 ideas clave</li>
@@ -320,8 +326,8 @@
         <div class="pricing-badge">Más Elegido</div>
         <div>
           <h3>Plan Pro</h3>
-          <p style="color: var(--text-muted); font-size: 13px;">Para podcasters y consultores</p>
-          <div class="price">$20.000 <span style="font-size: 14px; color: var(--text-muted)">CLP</span></div>
+          <p style="color: var(--text-sub); font-size: 13px;">Para podcasters y consultores</p>
+          <div class="price">$20.000 <span style="font-size: 14px; color: var(--text-sub)">CLP</span></div>
           <ul class="pricing-features">
             <li><i class="fa-solid fa-check"></i> Todo lo del Plan Básico</li>
             <li><i class="fa-solid fa-check"></i> Minutas de reunión estructuradas</li>
@@ -336,8 +342,8 @@
       <div class="pricing-card">
         <div>
           <h3>Plan Business</h3>
-          <p style="color: var(--text-muted); font-size: 13px;">Para agencias y productoras</p>
-          <div class="price">$35.000 <span style="font-size: 14px; color: var(--text-muted)">CLP</span></div>
+          <p style="color: var(--text-sub); font-size: 13px;">Para agencias y productoras</p>
+          <div class="price">$35.000 <span style="font-size: 14px; color: var(--text-sub)">CLP</span></div>
           <ul class="pricing-features">
             <li><i class="fa-solid fa-check"></i> Todo lo del Plan Pro</li>
             <li><i class="fa-solid fa-check"></i> Informes gerenciales avanzados</li>
