@@ -1,11 +1,5 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-
-// Define códigos fijos de respaldo por si necesitas usarlos manualmente
-const ACCESS_CODES = {
-  basic: ["BASIC2026", "CLIPS-BASIC"],
-  pro: ["PRO2026", "CREADOR-PRO"],
-  business: ["BUSINESS2026", "AUDIT-VIP"]
-};
+const crypto = require("crypto");
 
 // Prompts del Sistema según el Nivel de Suscripción
 const SYSTEM_PROMPTS = {
@@ -25,8 +19,34 @@ const SYSTEM_PROMPTS = {
   3. 📋 Plan de Acción Recomendado antes de firmar.`
 };
 
+// Función para verificar la firma HMAC del código de acceso usando tu clave secreta
+function validarCodigoFirma(passcode, secretKey) {
+  const partes = passcode.split('-');
+  if (partes.length !== 3) return null;
+
+  const [plan, randomPart, signature] = partes;
+  const planLower = plan.toLowerCase();
+
+  if (!['basic', 'pro', 'business'].includes(planLower)) return null;
+  if (randomPart.length !== 6) return null;
+
+  // Recalcular el HMAC con tu clave secreta
+  const expectedSignature = crypto
+    .createHmac('sha256', secretKey)
+    .update(`${plan}-${randomPart}`)
+    .digest('hex')
+    .substring(0, 4)
+    .toUpperCase();
+
+  if (crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature))) {
+    return planLower;
+  }
+
+  return null;
+}
+
 module.exports = async function handler(req, res) {
-  // Manejo de cabeceras CORS
+  // Configuración de cabeceras CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -35,13 +55,8 @@ module.exports = async function handler(req, res) {
     'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization'
   );
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método no permitido. Usa POST.' });
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido. Usa POST.' });
 
   try {
     const { textData, passcode } = req.body || {};
@@ -52,32 +67,26 @@ module.exports = async function handler(req, res) {
 
     if (!passcode || !passcode.trim()) {
       return res.status(401).json({ 
-        error: '⚠️ Código de acceso requerido. Ingresa la clave de tu suscripción o adquiere un plan en la sección de Precios.' 
+        error: '⚠️ Código de acceso requerido. Ingresa la clave enviada a tu correo.' 
       });
     }
 
     const cleanCode = passcode.trim().toUpperCase();
+    const secretKey = process.env.PASSCODE_SECRET || "ICKKICKKPUTUsecrito2032";
 
-    // Validación flexible: acepta prefijos automáticos de Make (ej: PRO-xxxx) o códigos fijos
-    let planAutorizado = null;
-    if (cleanCode.startsWith("BASIC") || ACCESS_CODES.basic.includes(cleanCode)) {
-      planAutorizado = "basic";
-    } else if (cleanCode.startsWith("PRO") || ACCESS_CODES.pro.includes(cleanCode)) {
-      planAutorizado = "pro";
-    } else if (cleanCode.startsWith("BUSINESS") || ACCESS_CODES.business.includes(cleanCode)) {
-      planAutorizado = "business";
-    }
+    // Validar autenticidad mediante firma criptográfica
+    const planAutorizado = validarCodigoFirma(cleanCode, secretKey);
 
     if (!planAutorizado) {
       return res.status(403).json({ 
-        error: '❌ Código de suscripción no válido o expirado. Por favor verifica tu clave o adquiere un plan.' 
+        error: '❌ Código inválido o falsificado. Solo son válidos los códigos legítimos enviados por correo.' 
       });
     }
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
       return res.status(500).json({ 
-        error: 'Falta la variable GEMINI_API_KEY en Vercel. Ve a Settings > Environment Variables y agrégala.' 
+        error: 'Falta la variable GEMINI_API_KEY en Vercel.' 
       });
     }
 
