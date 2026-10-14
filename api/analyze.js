@@ -27,37 +27,19 @@ export default async function handler(req, res) {
   const timestampStr = match[2];
   const providedSignature = match[3].toLowerCase();
 
-  // Recreamos exactamente el string que se firmó
-  const planPrefix = plan + '-';
-  const payloadToSign = `${planPrefix}${timestampStr}${SECRET_KEY}`;
-  
+  // 1. Validar la Firma Criptográfica SHA-256
+  const payloadToSign = `${plan}${timestampStr}${SECRET_KEY}`;
   const expectedSignature = crypto
     .createHash('sha256')
     .update(payloadToSign)
     .digest('hex')
     .substring(0, 6);
 
-  // DEBUG LOGS (Revisa Vercel -> Logs)
-  console.log("--- DEBUG HMAC VALIDATION ---");
-  console.log("Código recibido:", cleanCode);
-  console.log("Plan extraído:", plan);
-  console.log("Timestamp extraído:", timestampStr);
-  console.log("Firma provista (Make):", providedSignature);
-  console.log("Payload usado en Node:", payloadToSign);
-  console.log("Firma calculada en Node:", expectedSignature);
-  console.log("-----------------------------");
-
   if (providedSignature !== expectedSignature) {
-    return res.status(401).json({ 
-      error: 'Código de acceso no autorizado o falsificado',
-      debugInfo: {
-        providedSignature,
-        expectedSignature
-      }
-    });
+    return res.status(401).json({ error: 'Código de acceso no autorizado o falsificado' });
   }
 
-  // Validar Expiración de 30 Días
+  // 2. Validar Expiración de 30 Días
   const creationTimestamp = parseInt(timestampStr, 10) * 1000;
   const now = Date.now();
   const daysDiff = (now - creationTimestamp) / (1000 * 60 * 60 * 24);
@@ -66,11 +48,16 @@ export default async function handler(req, res) {
     return res.status(403).json({ error: 'Tu suscripción mensual ha expirado. Por favor renovar tu plan.' });
   }
 
+  // 3. Respuesta Exitosa con el Contenido Completo (Sin recortar con substring)
+  const fullAnalysis = content && content.trim() !== '' 
+    ? content 
+    : 'No se proporcionó texto para analizar. Ingresa el contenido o las notas de la reunión en el cuadro de texto.';
+
   return res.status(200).json({
     success: true,
     plan: plan,
     daysRemaining: Math.ceil(EXPIRATION_DAYS - daysDiff),
     message: `Acceso concedido para el plan ${plan}. Quedan ${Math.ceil(EXPIRATION_DAYS - daysDiff)} días de acceso.`,
-    analysis: `[RESULTADO DEL ANÁLISIS (${plan})]: ${content ? content.substring(0, 300) + '...' : 'Procesado con éxito.'}`
+    analysis: `[RESULTADO DEL ANÁLISIS COMPLETO (${plan})]:\n\n${fullAnalysis}`
   });
 }
