@@ -13,6 +13,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'El código de acceso es obligatorio' });
   }
 
+  // Sanitizar el código ingresado (eliminar espacios accidentales al inicio/final)
   const cleanCode = accessCode.trim();
 
   // Estructura: PLAN-TIMESTAMP_UNIX-FIRMA (Ej: BUSINESS-1792020397-62ece9)
@@ -27,16 +28,19 @@ export default async function handler(req, res) {
   const timestampStr = match[2];
   const providedSignature = match[3].toLowerCase();
 
-  // 1. Validar la Firma Criptográfica SHA-256
+  // 1. Validar la Firma SHA-256 (Plan + Timestamp + SecretKey)
   const payloadToSign = `${plan}${timestampStr}${SECRET_KEY}`;
   const expectedSignature = crypto
     .createHash('sha256')
     .update(payloadToSign)
     .digest('hex')
-    .substring(0, 6);
+    .substring(0, 6)
+    .toLowerCase();
 
   if (providedSignature !== expectedSignature) {
-    return res.status(401).json({ error: 'Código de acceso no autorizado o falsificado' });
+    return res.status(401).json({ 
+      error: 'Código de acceso no autorizado o falsificado' 
+    });
   }
 
   // 2. Validar Expiración de 30 Días
@@ -48,7 +52,7 @@ export default async function handler(req, res) {
     return res.status(403).json({ error: 'Tu suscripción mensual ha expirado. Por favor renovar tu plan.' });
   }
 
-  // 3. Respuesta Exitosa con el Contenido Completo (Sin recortar con substring)
+  // 3. Respuesta Exitosa con Contenido Completo
   const fullAnalysis = content && content.trim() !== '' 
     ? content 
     : 'No se proporcionó texto para analizar. Ingresa el contenido o las notas de la reunión en el cuadro de texto.';
