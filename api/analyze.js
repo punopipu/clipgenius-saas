@@ -1,17 +1,11 @@
 import crypto from 'crypto';
 
 const SECRET_KEY = process.env.SAAS_SECRET_KEY || "MiClaveUltraSecreta2026";
-const EXPIRATION_DAYS = 30; // Días de validez de la suscripción
+const EXPIRATION_DAYS = 30;
 
 export default async function handler(req, res) {
-  // Manejo de CORS si se requiere
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método no permitido' });
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
 
   const { accessCode, content } = req.body;
 
@@ -21,8 +15,8 @@ export default async function handler(req, res) {
 
   const cleanCode = accessCode.trim();
 
-  // Estructura: PLAN-TIMESTAMP_HEX-SIGNATURE_HEX (ejemplo: BUSINESS-670e5b80-a8f9)
-  const codeRegex = /^(BASIC|PRO|BUSINESS)-([a-f0-9]{8})-([a-f0-9]{6})$/i;
+  // Estructura: PLAN-TIMESTAMP_UNIX-FIRMA (Ej: BUSINESS-1760486400-a8f92c)
+  const codeRegex = /^(BASIC|PRO|BUSINESS)-(\d+)-([a-f0-9]{6})$/i;
   const match = cleanCode.match(codeRegex);
 
   if (!match) {
@@ -30,13 +24,13 @@ export default async function handler(req, res) {
   }
 
   const plan = match[1].toUpperCase();
-  const hexTimestamp = match[2].toLowerCase();
+  const timestampStr = match[2];
   const providedSignature = match[3].toLowerCase();
 
-  // 1. Validar la Firma HMAC para evitar códigos inventados
-  const payloadToSign = `${plan}-${hexTimestamp}`;
+  // 1. Validar la Firma Criptográfica SHA-256
+  const payloadToSign = `${plan}${timestampStr}${SECRET_KEY}`;
   const expectedSignature = crypto
-    .createHmac('sha256', SECRET_KEY)
+    .createHash('sha256')
     .update(payloadToSign)
     .digest('hex')
     .substring(0, 6);
@@ -46,7 +40,7 @@ export default async function handler(req, res) {
   }
 
   // 2. Validar Expiración de 30 Días
-  const creationTimestamp = parseInt(hexTimestamp, 16) * 1000; // Convertir UNIX hex a milisegundos
+  const creationTimestamp = parseInt(timestampStr, 10) * 1000;
   const now = Date.now();
   const daysDiff = (now - creationTimestamp) / (1000 * 60 * 60 * 24);
 
@@ -54,21 +48,12 @@ export default async function handler(req, res) {
     return res.status(403).json({ error: 'Tu suscripción mensual ha expirado. Por favor renovar tu plan.' });
   }
 
-  // 3. Procesamiento según el Plan
-  let systemPrompt = "";
-  if (plan === "BASIC") {
-    systemPrompt = "Genera un resumen ejecutivo corto y extrae las 3 ideas clave.";
-  } else if (plan === "PRO") {
-    systemPrompt = "Genera un análisis estructurado con minutas de reunión, puntos de acción y transcripción formateada.";
-  } else if (plan === "BUSINESS") {
-    systemPrompt = "Genera un informe gerencial avanzado con matriz de riesgos, resumen ejecutivo, minutas estructuradas y clips clave.";
-  }
-
+  // 3. Respuesta Exitosa
   return res.status(200).json({
     success: true,
     plan: plan,
     daysRemaining: Math.ceil(EXPIRATION_DAYS - daysDiff),
     message: `Acceso concedido para el plan ${plan}. Quedan ${Math.ceil(EXPIRATION_DAYS - daysDiff)} días de acceso.`,
-    analysis: `[RESULTADO DEL ANÁLISIS (${plan})]: ${content ? content.substring(0, 200) + '...' : 'Procesado con éxito.'}`
+    analysis: `[RESULTADO DEL ANÁLISIS (${plan})]: ${content ? content.substring(0, 300) + '...' : 'Procesado con éxito.'}`
   });
 }
