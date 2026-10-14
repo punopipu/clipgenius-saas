@@ -1,260 +1,473 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ClipGenius & AuditAI | IA Multimodal para Creadores y Empresas en Chile</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>ClipGenius & AuditAI | IA para Análisis Masivo y Extracción de Contenido</title>
+  <meta name="description" content="Plataforma SaaS de Inteligencia Artificial para auditar reuniones, extraer fragmentos virales y procesar documentos ejecutivos en segundos.">
+  
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-    body { font-family: 'Inter', sans-serif; }
+    :root {
+      --bg-main: #090d16;
+      --bg-card: #111827;
+      --bg-input: #1f293d;
+      --primary: #38bdf8;
+      --primary-hover: #0284c7;
+      --accent: #818cf8;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #1e293b;
+      --success: #4ade80;
+      --error: #f87171;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
+
+    body { background-color: var(--bg-main); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
+
+    /* --- NAVBAR --- */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(9, 13, 22, 0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border); padding: 18px 8%;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .logo { font-size: 22px; font-weight: 800; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+    .logo span { color: var(--primary); }
+    nav ul { display: flex; list-style: none; gap: 30px; align-items: center; }
+    nav a { color: var(--text-muted); text-decoration: none; font-weight: 500; transition: 0.2s; font-size: 15px; }
+    nav a:hover { color: var(--primary); }
+    .btn-nav {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #fff !important; padding: 10px 22px; border-radius: 8px; font-weight: 600;
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3); transition: 0.3s !important;
+    }
+    .btn-nav:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(56, 189, 248, 0.5); }
+
+    /* --- HERO SECTION --- */
+    .hero {
+      padding: 160px 8% 100px; text-align: center; background: radial-gradient(circle at top, rgba(56, 189, 248, 0.15) 0%, transparent 60%);
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .badge {
+      background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); color: var(--primary);
+      padding: 6px 16px; border-radius: 50px; font-size: 13px; font-weight: 600; margin-bottom: 25px; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .hero h1 { font-size: 54px; font-weight: 800; line-height: 1.15; max-width: 900px; margin-bottom: 20px; }
+    .hero h1 span { background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { font-size: 19px; color: var(--text-muted); max-width: 680px; margin-bottom: 40px; }
+    .hero-buttons { display: flex; gap: 20px; justify-content: center; }
+
+    /* --- APP CONSOLE / WORKSPACE (SECCIÓN PRINCIPAL) --- */
+    .app-section { padding: 80px 8%; background: var(--bg-main); }
+    .app-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px;
+      padding: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); max-width: 1000px; margin: 0 auto;
+    }
+    .app-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+    .app-header h2 { font-size: 24px; display: flex; align-items: center; gap: 12px; color: var(--primary); }
+    .grid-inputs { display: grid; grid-template-columns: 1fr 2fr; gap: 25px; margin-bottom: 25px; }
+    
+    label { font-size: 14px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; display: block; }
+    input[type="text"], textarea {
+      width: 100%; padding: 14px 18px; background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: 10px; color: #fff; font-size: 15px; outline: none; transition: 0.3s;
+    }
+    input[type="text"]:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2); }
+    
+    .btn-action {
+      width: 100%; padding: 16px; background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+      color: #fff; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer;
+      display: flex; justify-content: center; align-items: center; gap: 10px; transition: 0.3s;
+    }
+    .btn-action:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(2, 132, 199, 0.4); }
+    .btn-action:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    #result {
+      margin-top: 30px; padding: 25px; background: var(--bg-input); border-radius: 12px;
+      border: 1px solid var(--border); min-height: 120px; white-space: pre-wrap; font-size: 15px;
+    }
+    #result.error { border-color: var(--error); color: var(--error); background: rgba(248, 113, 113, 0.05); }
+    #result.success { border-color: var(--success); color: var(--text-main); background: rgba(74, 222, 128, 0.05); }
+
+    /* --- METRICS / STATS --- */
+    .stats-section { padding: 60px 8%; display: flex; justify-content: space-around; background: #0c1220; border-y: 1px solid var(--border); text-align: center; }
+    .stat-box h3 { font-size: 42px; font-weight: 800; color: var(--primary); margin-bottom: 5px; }
+    .stat-box p { color: var(--text-muted); font-size: 15px; font-weight: 500; }
+
+    /* --- FEATURES --- */
+    .features { padding: 100px 8%; }
+    .section-title { text-align: center; margin-bottom: 60px; }
+    .section-title h2 { font-size: 36px; font-weight: 800; margin-bottom: 15px; }
+    .section-title p { color: var(--text-muted); font-size: 17px; max-width: 600px; margin: 0 auto; }
+    
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+    .feature-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 35px;
+      transition: 0.3s; position: relative; overflow: hidden;
+    }
+    .feature-card:hover { border-color: var(--primary); transform: translateY(-5px); }
+    .feature-icon {
+      width: 55px; height: 55px; background: rgba(56, 189, 248, 0.1); border-radius: 12px;
+      display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--primary); margin-bottom: 25px;
+    }
+    .feature-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+    .feature-card p { color: var(--text-muted); font-size: 15px; }
+
+    /* --- PRICING --- */
+    .pricing { padding: 100px 8%; background: #0c1220; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; max-width: 1100px; margin: 0 auto; }
+    .pricing-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 40px;
+      display: flex; flex-direction: column; justify-content: space-between; position: relative;
+    }
+    .pricing-card.popular { border-color: var(--primary); box-shadow: 0 10px 30px rgba(56, 189, 248, 0.2); }
+    .pricing-badge {
+      position: absolute; top: -15px; right: 25px; background: var(--primary); color: #000;
+      padding: 4px 14px; border-radius: 50px; font-size: 12px; font-weight: 800; text-transform: uppercase;
+    }
+    .price { font-size: 38px; font-weight: 800; margin: 20px 0; color: #fff; }
+    .price span { font-size: 15px; color: var(--text-muted); font-weight: 400; }
+    .pricing-features { list-style: none; margin-bottom: 30px; }
+    .pricing-features li { margin-bottom: 12px; color: var(--text-muted); font-size: 14px; display: flex; align-items: center; gap: 10px; }
+    .pricing-features li i { color: var(--success); }
+
+    /* --- FAQ --- */
+    .faq { padding: 100px 8%; max-width: 800px; margin: 0 auto; }
+    .faq-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
+    .faq-question { padding: 20px 25px; font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .faq-answer { padding: 0 25px 20px; color: var(--text-muted); font-size: 15px; display: none; }
+
+    /* --- FOOTER --- */
+    footer { border-top: 1px solid var(--border); padding: 60px 8% 30px; background: #070a12; color: var(--text-muted); font-size: 14px; }
+    .footer-grid { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 40px; margin-bottom: 50px; }
+    .footer-brand p { margin-top: 15px; max-width: 300px; }
+    .footer-col h4 { color: #fff; margin-bottom: 20px; font-size: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 10px; }
+    .footer-col a { color: var(--text-muted); text-decoration: none; transition: 0.2s; }
+    .footer-col a:hover { color: var(--primary); }
+    .footer-bottom { text-align: center; border-top: 1px solid var(--border); padding-top: 30px; font-size: 13px; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      header { padding: 15px 5%; }
+      nav { display: none; }
+      .hero h1 { font-size: 36px; }
+      .grid-inputs { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 antialiased selection:bg-indigo-500 selection:text-white">
+<body>
 
-  <!-- Header Fijo de Navegación -->
-  <header class="border-b border-slate-800/60 p-4 sticky top-0 bg-slate-950/80 backdrop-blur-xl z-50 transition-all">
-    <div class="max-w-7xl mx-auto flex justify-between items-center w-full">
-      <h1 class="text-xl font-black flex items-center gap-2 cursor-pointer tracking-tight" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-        <span class="text-indigo-500 text-2xl">⚡</span> ClipGenius <span class="text-slate-500 font-light">&</span> AuditAI
-      </h1>
-      <nav class="hidden lg:flex items-center gap-8 text-sm text-slate-400 font-medium">
-        <a href="#por-que-nosotros" class="hover:text-white transition">¿Por qué elegirnos?</a>
-        <a href="#planes" class="hover:text-white transition">Precios</a>
-        <a href="#app-area" class="hover:text-white transition">Consola IA</a>
-      </nav>
-      
-      <div class="flex items-center gap-3">
-        <a href="#planes" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2.5 rounded-full transition shadow-lg shadow-indigo-600/25">
-          Obtener Suscripción
-        </a>
-      </div>
-    </div>
+  <!-- NAVBAR -->
+  <header>
+    <a href="#" class="logo">
+      <i class="fa-solid fa-bolt-lightning" style="color: var(--primary)"></i>
+      ClipGenius <span>& AuditAI</span>
+    </a>
+    <nav>
+      <ul>
+        <li><a href="#console">Consola</a></li>
+        <li><a href="#features">Funcionalidades</a></li>
+        <li><a href="#pricing">Planes y Precios</a></li>
+        <li><a href="#faq">Preguntas Frecuentes</a></li>
+        <li><a href="#console" class="btn-nav">Acceso Clientes</a></li>
+      </ul>
+    </nav>
   </header>
 
-  <!-- Hero Section -->
-  <section class="relative pt-24 pb-20 px-6 text-center overflow-hidden">
-    <div class="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none">
-      <div class="w-[600px] h-[600px] bg-indigo-600/10 blur-[160px] rounded-full"></div>
-      <div class="w-[400px] h-[400px] bg-purple-600/10 blur-[140px] rounded-full"></div>
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="badge"><i class="fa-solid fa-sparkles"></i> Motor de IA Criptográfico v2.4 Activo</div>
+    <h1>Auditoría Ejecutiva y Extracción de Contenido <span>en Segundos</span></h1>
+    <p>Automatiza minutas de reunión, detecta momentos clave en videos largos y genera reportes de inteligencia estratégica sin depender de software complejo.</p>
+    <div class="hero-buttons">
+      <a href="#console" class="btn-nav" style="padding: 14px 32px; font-size: 16px;">Probar Consola IA</a>
+      <a href="#pricing" style="background: var(--bg-card); border: 1px solid var(--border); color: #fff; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600;">Ver Licencias</a>
     </div>
-    <div class="max-w-5xl mx-auto">
-      <span class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 mb-6 shadow-inner">
-        <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span> Motor Gemini 3.5 Flash Lite • Acceso Seguro por Código
-      </span>
-      <h2 class="text-5xl md:text-7xl font-black tracking-tight mb-6 leading-tight">
-        Convierte archivos complejos en <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">decisiones inteligentes</span> en segundos.
-      </h2>
-      <p class="text-lg md:text-xl text-slate-400 mb-10 max-w-3xl mx-auto leading-relaxed">
-        La plataforma dual diseñada para que <strong class="text-white font-semibold">creadores de contenido</strong> automaticen su viralidad y <strong class="text-white font-semibold">empresas o equipos legales</strong> auditen contratos y minutas con precisión.
-      </p>
-      <div class="flex flex-col sm:flex-row justify-center gap-4 mb-16">
-        <a href="#app-area" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-8 py-4 rounded-2xl transition shadow-xl shadow-indigo-600/30 text-base">
-          Acceder a la Consola
-        </a>
-        <a href="#planes" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 font-bold px-8 py-4 rounded-2xl transition text-base">
-          Ver Planes y Precios
-        </a>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats-section">
+    <div class="stat-box">
+      <h3>&lt; 60s</h3>
+      <p>Tiempo medio de procesamiento</p>
+    </div>
+    <div class="stat-box">
+      <h3>99.9%</h3>
+      <p>Precisión de Firma HMAC</p>
+    </div>
+    <div class="stat-box">
+      <h3>10x</h3>
+      <p>Ahorro de horas semanales</p>
+    </div>
+    <div class="stat-box">
+      <h3>256-bit</h3>
+      <p>Encriptación de extremo a extremo</p>
+    </div>
+  </section>
+
+  <!-- WORKSPACE / CONSOLA DE TRABAJO -->
+  <section class="app-section" id="console">
+    <div class="app-card">
+      <div class="app-header">
+        <h2><i class="fa-solid fa-terminal"></i> Consola de Inteligencia Artificial</h2>
+        <span style="font-size: 13px; color: var(--success); font-weight: 600;"><i class="fa-solid fa-circle" style="font-size: 8px;"></i> Sistema Online</span>
+      </div>
+
+      <div class="grid-inputs">
+        <div>
+          <label for="accessCodeInput"><i class="fa-solid fa-key"></i> Código de Acceso Válido:</label>
+          <input type="text" id="accessCodeInput" placeholder="Ej: BUSINESS-670e5b80-a8f9">
+          <span style="font-size: 12px; color: var(--text-muted); margin-top: 6px; display: block;">Proporcionado al contratar tu plan.</span>
+        </div>
+        <div>
+          <label for="contentInput"><i class="fa-solid fa-file-lines"></i> Texto / Transcripción / Enlace a Procesar:</label>
+          <textarea id="contentInput" rows="5" placeholder="Pega aquí las notas de reunión, el enlace del video, o el texto que deseas analizar..."></textarea>
+        </div>
+      </div>
+
+      <button id="analyzeBtn" class="btn-action" onclick="processAnalysis()">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> Ejecutar Análisis Avanzado
+      </button>
+
+      <label style="margin-top: 25px;"><i class="fa-solid fa-square-poll-vertical"></i> Resultado del Procesamiento:</label>
+      <div id="result">Ingresa tu código de licencia y presiona "Ejecutar Análisis Avanzado" para visualizar el informe...</div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <div class="section-title">
+      <h2>Diseñado para Equipos Exigentes</h2>
+      <p>Combina la extracción viral de contenidos con la rigurosidad de auditorías corporativas.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <h3>Seguridad HMAC-SHA256</h3>
+        <p>Tus claves están firmadas criptográficamente. Sin bases de datos vulnerables, acceso instantáneo verificado por servidor.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fa-solid fa-scissors"></i></div>
+        <h3>Extracción de Clips Virales</h3>
+        <p>ClipGenius detecta patrones emocionales y ganchos de retención en podcasts para extraer los mejores minutos automáticamente.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fa-solid fa-chart-pie"></i></div>
+        <h3>Auditoría de Reuninon & KPIs</h3>
+        <p>AuditAI convierte 2 horas de discusión en un informe de 1 página con compromisos, responsables y riesgos identificados.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+        <h3>Velocidad de Respuesta</h3>
+        <p>Construido sobre Vercel Serverless Functions para ofrecer respuestas en menos de 3 segundos sin demoras de servidor.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+        <h3>Gestión de Ciclos de 30 Días</h3>
+        <p>Acceso automatizado por suscripción mensual que expira automáticamente al término de cada ciclo renovable.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fa-solid fa-code"></i></div>
+        <h3>Cero Instalaciones</h3>
+        <p>Funciona 100% en la nube. Accede desde cualquier navegador web sin descargar pesados programas ni extensiones.</p>
       </div>
     </div>
   </section>
 
-  <!-- CONSOLA DE IA PROTEGIDA POR CÓDIGO -->
-  <section id="app-area" class="py-16 px-6 max-w-4xl mx-auto">
-    <div class="bg-slate-900 border border-indigo-500/40 rounded-3xl p-8 md:p-10 shadow-2xl relative overflow-hidden">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-6 border-b border-slate-800 mb-8 gap-4">
+  <!-- PRICING -->
+  <section class="pricing" id="pricing">
+    <div class="section-title">
+      <h2>Planes a la Medida de tu Negocio</h2>
+      <p>Selecciona la licencia acorde a tus necesidades de procesamiento y escala tu productividad.</p>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- PLAN BASIC -->
+      <div class="pricing-card">
         <div>
-          <span class="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">● Servidor Protegido</span>
-          <h3 class="text-xl font-bold text-white mt-2">Consola de Análisis Protegida</h3>
+          <h3>Plan Básico</h3>
+          <p style="color: var(--text-muted); font-size: 14px;">Para creadores individuales</p>
+          <div class="price">$15.000 <span>/ mes CLP</span></div>
+          <ul class="pricing-features">
+            <li><i class="fa-solid fa-check"></i> Resúmenes ejecutivos cortos</li>
+            <li><i class="fa-solid fa-check"></i> Extracción de 3 ideas clave</li>
+            <li><i class="fa-solid fa-check"></i> Validez por 30 Días</li>
+            <li><i class="fa-solid fa-check"></i> Soporte vía Email</li>
+          </ul>
         </div>
+        <a href="#console" class="btn-action" style="background: var(--bg-input); border: 1px solid var(--border);">Contratar Básico</a>
       </div>
 
-      <div class="space-y-6">
-        <!-- Campo para Código de Suscripción -->
+      <!-- PLAN PRO -->
+      <div class="pricing-card popular">
+        <div class="pricing-badge">Más Popular</div>
         <div>
-          <label class="block text-sm font-semibold text-slate-200 mb-2">Clave / Código de Suscripción:</label>
-          <input type="text" id="passcodeInput" class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-4 text-sm text-white font-mono uppercase focus:outline-none focus:border-indigo-500 transition placeholder-slate-600" placeholder="Ej: PRO-2026, BASIC-2026 o BUSINESS-2026">
-          <p class="text-xs text-slate-500 mt-1.5">El servidor detectará tu nivel de plan automáticamente según el código que ingreses.</p>
+          <h3>Plan Pro</h3>
+          <p style="color: var(--text-muted); font-size: 14px;">Para podcasters y consultores</p>
+          <div class="price">$25.000 <span>/ mes CLP</span></div>
+          <ul class="pricing-features">
+            <li><i class="fa-solid fa-check"></i> Todo lo del Plan Básico</li>
+            <li><i class="fa-solid fa-check"></i> Minutas de reunión estructuradas</li>
+            <li><i class="fa-solid fa-check"></i> Puntos de acción y responsables</li>
+            <li><i class="fa-solid fa-check"></i> Transcripción formateada</li>
+            <li><i class="fa-solid fa-check"></i> Procesamiento prioritario</li>
+          </ul>
         </div>
-
-        <div>
-          <label class="block text-sm font-semibold text-slate-200 mb-2">Ingresa o pega tu transcripción, notas o documento:</label>
-          <textarea id="textContent" rows="7" class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-5 text-sm text-white focus:outline-none focus:border-indigo-500 placeholder-slate-600 leading-relaxed font-mono" placeholder="Pega aquí el contenido que deseas procesar..."></textarea>
-        </div>
-
-        <button onclick="ejecutarAnalisisSeguro()" id="btnProcess" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 rounded-2xl transition shadow-xl shadow-indigo-600/25 text-base">
-          Validar Código y Ejecutar Análisis
-        </button>
+        <a href="#console" class="btn-action">Contratar Pro</a>
       </div>
 
-      <div class="mt-8">
-        <label class="block text-sm font-semibold text-slate-200 mb-2">Resultado del Servidor:</label>
-        <div id="resultadoOutput" class="bg-slate-950 border border-slate-800 rounded-2xl p-6 text-sm text-slate-300 min-h-[180px] whitespace-pre-line font-mono leading-relaxed">
-          Ingresa tu código de suscripción (ej: PRO-2026), pega el texto y presiona "Validar Código y Ejecutar Análisis".
+      <!-- PLAN BUSINESS -->
+      <div class="pricing-card">
+        <div>
+          <h3>Plan Business</h3>
+          <p style="color: var(--text-muted); font-size: 14px;">Para agencias y productoras</p>
+          <div class="price">$40.000 <span>/ mes CLP</span></div>
+          <ul class="pricing-features">
+            <li><i class="fa-solid fa-check"></i> Todo lo del Plan Pro</li>
+            <li><i class="fa-solid fa-check"></i> Informes gerenciales avanzados</li>
+            <li><i class="fa-solid fa-check"></i> Matriz de riesgos y oportunidades</li>
+            <li><i class="fa-solid fa-check"></i> Detección de clips virales clave</li>
+            <li><i class="fa-solid fa-check"></i> Licencia multi-usuario para equipos</li>
+          </ul>
         </div>
+        <a href="#console" class="btn-action" style="background: var(--bg-input); border: 1px solid var(--border);">Contratar Business</a>
       </div>
     </div>
   </section>
 
-  <!-- Ventaja Competitiva -->
-  <section id="por-que-nosotros" class="py-24 px-6 border-t border-slate-900 bg-slate-950/80 relative">
-    <div class="max-w-7xl mx-auto">
-      <div class="text-center max-w-3xl mx-auto mb-16">
-        <span class="text-xs font-semibold text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20 uppercase tracking-widest">Ventaja Competitiva</span>
-        <h3 class="text-3xl md:text-5xl font-black text-white mt-3 mb-4">¿Por qué usar ClipGenius & AuditAI?</h3>
-        <p class="text-slate-400">Compara el rendimiento directo frente al trabajo manual y a los chats genéricos.</p>
-      </div>
+  <!-- FAQ -->
+  <section class="faq" id="faq">
+    <div class="section-title">
+      <h2>Preguntas Frecuentes</h2>
+    </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="bg-slate-900/40 border border-slate-800 p-8 rounded-3xl">
-          <div class="text-red-400 text-3xl mb-4">⏳</div>
-          <h4 class="text-xl font-bold text-white mb-2">Trabajo Manual</h4>
-          <p class="text-slate-500 text-xs mb-6">Revisión tradicional por personas.</p>
-          <ul class="text-sm text-slate-400 space-y-4">
-            <li class="flex items-start gap-2"><span class="text-red-500 font-bold">✕</span><span>Tomar notas en 2 horas de video toma hasta 4 horas de trabajo.</span></li>
-            <li class="flex items-start gap-2"><span class="text-red-500 font-bold">✕</span><span>Alto costo en horas hombre para tareas repetitivas.</span></li>
-          </ul>
-        </div>
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">¿Cómo recibo mi código de acceso tras realizar el pago? <i class="fa-solid fa-chevron-down"></i></div>
+      <div class="faq-answer">Una vez completada la transferencia o pago en Tally, nuestro sistema automatizado de Make genera una firma criptográfica única y la envía inmediatamente a tu correo electrónico registrado.</div>
+    </div>
 
-        <div class="bg-slate-900/40 border border-slate-800 p-8 rounded-3xl">
-          <div class="text-amber-400 text-3xl mb-4">🤖</div>
-          <h4 class="text-xl font-bold text-white mb-2">IA Convencional</h4>
-          <p class="text-slate-500 text-xs mb-6">Prompts genéricos en chats públicos.</p>
-          <ul class="text-sm text-slate-400 space-y-4">
-            <li class="flex items-start gap-2"><span class="text-amber-500 font-bold">⚠️</span><span>Respuestas genéricas sin estructura de auditoría ni viralidad.</span></li>
-            <li class="flex items-start gap-2"><span class="text-amber-500 font-bold">⚠️</span><span>Requiere redactar instrucciones complejas cada vez.</span></li>
-          </ul>
-        </div>
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">¿Cuánto tiempo dura la validez de cada código? <i class="fa-solid fa-chevron-down"></i></div>
+      <div class="faq-answer">Cada código cuenta con un sello de tiempo integrado que le otorga 30 días continuos de acceso a la plataforma desde el momento exacto de su emisión.</div>
+    </div>
 
-        <div class="bg-slate-900 border-2 border-indigo-500/80 p-8 rounded-3xl shadow-2xl shadow-indigo-500/10">
-          <div class="text-indigo-400 text-3xl mb-4">⚡</div>
-          <h4 class="text-xl font-bold text-white mb-2">ClipGenius & AuditAI</h4>
-          <p class="text-indigo-300/80 text-xs mb-6">Prompts de Grado Industrial en Servidor.</p>
-          <ul class="text-sm text-slate-200 space-y-4">
-            <li class="flex items-start gap-2"><span class="text-emerald-400 font-bold">✓</span><span>Analítica lista en segundos formateada según tu suscripción.</span></li>
-            <li class="flex items-start gap-2"><span class="text-emerald-400 font-bold">✓</span><span>Matriz de Alerta de Riesgos (🔴🟡🟢) y Viral Hooks automáticos.</span></li>
-          </ul>
-        </div>
-      </div>
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">¿Es seguro procesar información privada corporativa? <i class="fa-solid fa-chevron-down"></i></div>
+      <div class="faq-answer">Absolutamente. No almacenamos el texto ni los archivos procesados en bases de datos permanentes. Todo el análisis se ejecuta en memoria mediante funciones Serverless encriptadas.</div>
     </div>
   </section>
 
-  <!-- Planes y Precios -->
-  <section id="planes" class="py-24 px-6 border-t border-slate-900 bg-slate-950/40">
-    <div class="max-w-7xl mx-auto text-center mb-16">
-      <span class="text-xs font-semibold text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20 uppercase tracking-widest">Inversión Transparente</span>
-      <h3 class="text-3xl md:text-5xl font-black text-white mt-3 mb-4">Planes diseñados para cada necesidad</h3>
-      <p class="text-slate-400 max-w-2xl mx-auto">Suscríbete vía transferencia bancaria (CuentaRUT) a través de Tally y recibe tu código de acceso inmediato por correo.</p>
-    </div>
-
-    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-      <!-- Plan Básico -->
-      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 flex flex-col justify-between">
-        <div>
-          <h4 class="text-xl font-bold text-white mb-2">Plan Básico</h4>
-          <p class="text-slate-400 text-sm mb-6">Para particulares y síntesis rápida.</p>
-          <div class="text-4xl font-black text-white mb-6">$10.000 <span class="text-xs font-normal text-slate-400">CLP / mes</span></div>
-          <ul class="text-sm text-slate-300 space-y-3 mb-8">
-            <li class="flex items-center gap-2"><span class="text-emerald-400">✔</span> Resumen ejecutivo corto</li>
-            <li class="flex items-center gap-2"><span class="text-emerald-400">✔</span> 3 a 5 timestamps principales</li>
-            <li class="flex items-center gap-2"><span class="text-emerald-400">✔</span> Conclusiones clave directas</li>
-          </ul>
-        </div>
-        <a href="https://tally.so/r/BzOgeY" target="_blank" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3.5 rounded-xl text-center text-sm transition block">
-          Suscribirme a Básico
-        </a>
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="logo"><i class="fa-solid fa-bolt-lightning" style="color: var(--primary)"></i> ClipGenius</a>
+        <p>Plataforma de inteligencia artificial para agencias, creadores de contenido y firmas de consultoría.</p>
       </div>
-
-      <!-- Plan Pro Creador -->
-      <div class="bg-slate-900 border border-indigo-500/60 rounded-3xl p-8 flex flex-col justify-between relative shadow-2xl shadow-indigo-500/15 md:-translate-y-3">
-        <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wider">
-          Más Popular
-        </div>
-        <div>
-          <h4 class="text-xl font-bold text-white mb-2">Plan Pro Creador</h4>
-          <p class="text-slate-400 text-sm mb-6">Para podcasters y creadores de contenido.</p>
-          <div class="text-4xl font-black text-white mb-6">$20.000 <span class="text-xs font-normal text-slate-400">CLP / mes</span></div>
-          <ul class="text-sm text-slate-300 space-y-3 mb-8">
-            <li class="flex items-center gap-2"><span class="text-emerald-400">✔</span> Desglose completo por capítulos</li>
-            <li class="flex items-center gap-2"><span class="text-emerald-400">✔</span> Top 5 Viral Hooks para Shorts/Reels</li>
-            <li class="flex items-center gap-2"><span class="text-emerald-400">✔</span> Kit completo de redes sociales</li>
-          </ul>
-        </div>
-        <a href="https://tally.so/r/BzOgeY" target="_blank" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3.5 rounded-xl text-center text-sm transition block">
-          Suscribirme a Pro
-        </a>
+      <div class="footer-col">
+        <h4>Producto</h4>
+        <ul>
+          <li><a href="#console">Consola IA</a></li>
+          <li><a href="#features">Funcionalidades</a></li>
+          <li><a href="#pricing">Planes</a></li>
+        </ul>
       </div>
-
-      <!-- Plan Business / AuditAI -->
-      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 flex flex-col justify-between">
-        <div>
-          <h4 class="text-xl font-bold text-white mb-2">Business & AuditAI</h4>
-          <p class="text-slate-400 text-sm mb-6">Auditoría corporativa y legal para empresas.</p>
-          <div class="text-4xl font-black text-white mb-6">$35.000 <span class="text-xs font-normal text-slate-400">CLP / mes</span></div>
-          <ul class="text-sm text-slate-300 space-y-3 mb-8">
-            <li class="flex items-center gap-2"><span class="text-emerald-400">✔</span> Matriz de Alerta de Riesgos (🔴🟡🟢)</li>
-            <li class="flex items-center gap-2"><span class="text-emerald-400">✔</span> Detección de cláusulas abusivas</li>
-            <li class="flex items-center gap-2"><span class="text-emerald-400">✔</span> Minuta ejecutiva y plan de acción</li>
-          </ul>
-        </div>
-        <a href="https://tally.so/r/BzOgeY" target="_blank" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold py-3.5 rounded-xl text-center text-sm transition block">
-          Suscribirme a Business
-        </a>
+      <div class="footer-col">
+        <h4>Seguridad</h4>
+        <ul>
+          <li><a href="#">Firma HMAC SHA-256</a></li>
+          <li><a href="#">Privacidad de Datos</a></li>
+          <li><a href="#">Términos del Servicio</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Soporte</h4>
+        <ul>
+          <li><a href="#">Contacto Directo</a></li>
+          <li><a href="#">Documentación API</a></li>
+          <li><a href="#">Estado del Sistema</a></li>
+        </ul>
       </div>
     </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="border-t border-slate-900 py-12 px-6 bg-slate-950 text-center text-xs text-slate-600">
-    <p>&copy; 2026 ClipGenius & AuditAI. Todos los derechos reservados. Operando en Chile.</p>
+    <div class="footer-bottom">
+      &copy; 2026 ClipGenius & AuditAI SaaS. Todos los derechos reservados. Desarrollado con alta seguridad en Vercel & Make.
+    </div>
   </footer>
 
-  <!-- Script Frontend de Comunicación con Vercel -->
+  <!-- SCRIPT CONSOLA & INTERACTIVIDAD -->
   <script>
-    async function ejecutarAnalisisSeguro() {
-      const texto = document.getElementById('textContent').value;
-      const codigo = document.getElementById('passcodeInput').value;
-      const output = document.getElementById('resultadoOutput');
-      const btn = document.getElementById('btnProcess');
+    async function processAnalysis() {
+      const codeInput = document.getElementById('accessCodeInput').value;
+      const contentInput = document.getElementById('contentInput').value;
+      const resultDiv = document.getElementById('result');
+      const btn = document.getElementById('analyzeBtn');
 
-      if (!codigo.trim()) {
-        alert("Por favor ingresa tu código de suscripción.");
-        return;
-      }
-
-      if (!texto.trim()) {
-        alert("Por favor ingresa un texto o transcripción para analizar.");
+      if (!codeInput.trim()) {
+        resultDiv.className = "error";
+        resultDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Error: Por favor ingresa tu código de acceso antes de continuar.';
         return;
       }
 
       btn.disabled = true;
-      btn.innerText = "Verificando código y procesando...";
-      output.innerText = "Validando código de suscripción con el servidor...";
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Validando firma y analizando...';
+      resultDiv.className = "";
+      resultDiv.innerText = "Verificando autenticidad criptográfica del código en Vercel...";
 
       try {
-        const res = await fetch('/api/analyze', {
+        const response = await fetch('/api/analyze', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ 
-            textData: texto,
-            passcode: codigo 
+          body: JSON.stringify({
+            accessCode: codeInput,
+            content: contentInput
           })
         });
 
-        const data = await res.json();
-        if (res.ok && data.success) {
-          output.innerText = data.analysis;
+        const data = await response.json();
+
+        if (!response.ok) {
+          resultDiv.className = "error";
+          resultDiv.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> <strong>Error:</strong> ${data.error || "No se pudo procesar la solicitud."}`;
         } else {
-          output.innerText = (data.error || "Código no autorizado.");
+          resultDiv.className = "success";
+          resultDiv.innerHTML = `<i class="fa-solid fa-circle-check" style="color: var(--success)"></i> <strong>${data.message}</strong>\n\n${data.analysis}`;
         }
       } catch (err) {
-        output.innerText = "Error de conexión con el backend (/api/analyze).";
+        resultDiv.className = "error";
+        resultDiv.innerHTML = `<i class="fa-solid fa-wifi"></i> Error de conexión con el servidor: ${err.message}`;
       } finally {
         btn.disabled = false;
-        btn.innerText = "Validar Código y Ejecutar Análisis";
+        btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Ejecutar Análisis Avanzado';
+      }
+    }
+
+    function toggleFaq(element) {
+      const answer = element.nextElementSibling;
+      const icon = element.querySelector('i');
+      if (answer.style.display === "block") {
+        answer.style.display = "none";
+        icon.className = "fa-solid fa-chevron-down";
+      } else {
+        answer.style.display = "block";
+        icon.className = "fa-solid fa-chevron-up";
       }
     }
   </script>
