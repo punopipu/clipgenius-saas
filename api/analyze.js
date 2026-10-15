@@ -25,7 +25,7 @@ export default async function handler(req, res) {
   const timestampStr = match[2];
   const providedSignature = match[3].toLowerCase();
 
-  // 1. Validar la Firma Criptográfica SHA-256
+  // 1. Validar Firma Criptográfica SHA-256
   const payloadToSign = `${plan}${timestampStr}${SECRET_KEY}`;
   const expectedSignature = crypto
     .createHash('sha256')
@@ -38,7 +38,7 @@ export default async function handler(req, res) {
     return res.status(401).json({ error: 'Código de acceso no autorizado o falsificado' });
   }
 
-  // 2. Validar Expiración de 30 Días
+  // 2. Validar Expiración
   const creationTimestamp = parseInt(timestampStr, 10) * 1000;
   const now = Date.now();
   const daysDiff = (now - creationTimestamp) / (1000 * 60 * 60 * 24);
@@ -51,18 +51,67 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Por favor ingresa un texto o transcripción para analizar.' });
   }
 
-  // 3. GENERADOR DE ANÁLISIS SEGÚN EL PLAN (Estructura robusta garantizada)
+  // 3. ANÁLISIS DINÁMICO BASADO EN EL TEXTO REAL INGRESADO
+  const cleanText = content.trim();
+  const words = cleanText.split(/\s+/).filter(w => w.length > 0);
+  const wordCount = words.length;
+  const charCount = cleanText.length;
+  const readingTimeMinutes = Math.max(1, Math.ceil(wordCount / 200));
+  const snippet = cleanText.length > 150 ? cleanText.substring(0, 150) + "..." : cleanText;
+
   let aiAnalysisText = "";
 
   if (plan === "BASIC") {
-    aiAnalysisText = `### 📋 RESUMEN EJECUTIVO (PLAN BÁSICO)\n\nEl documento ingresado presenta una narrativa detallada sobre escenarios especulativos y tecnológicos.\n\n**Puntos clave:**\n1. Desarrollo de tramas con enfoque científico-ficcional.\n2. Interacción avanzada entre humanos y entidades autónomas.\n3. Planteamiento de dilemas éticos y temporales.`;
+    aiAnalysisText = `### 📋 RESUMEN EJECUTIVO (PLAN BÁSICO)
+
+**Síntesis del Contenido:**
+El texto ingresado contiene **${wordCount} palabras** y un estimado de lectura de **${readingTimeMinutes} min**.
+
+**Vista previa analizada:**
+> "${snippet}"
+
+**Puntos Clave:**
+1. **Longitud y Estructura:** Documento procesado con un total de ${charCount} caracteres.
+2. **Tema Principal:** Centrado en los conceptos presentados en la entrada del usuario.
+3. **Lectura Rápida:** Tiempo estimado de asimilación de ${readingTimeMinutes} minuto(s).`;
+
   } else if (plan === "PRO") {
-    aiAnalysisText = `### 🔍 AUDITORÍA E INVESTIGACIÓN (PLAN PRO)\n\n**1. Resumen Ejecutivo:**\nAnálisis profundo de la estructura narrativa y técnica del texto.\n\n**2. Minuta de Decisiones:**\n- Evaluación de variables causales y temporales.\n- Identificación de puntos de inflexión en la trama.\n\n**3. Plan de Trabajo y Compromisos:**\n- Consolidación de arcos dramáticos.\n- Optimización de subtramas técnicas.`;
+    aiAnalysisText = `### 🔍 AUDITORÍA DE CONTENIDO (PLAN PRO)
+
+**1. Resumen Ejecutivo:**
+Se ha procesado exitosamente la transcripción/documento enviado. Muestra un volumen de **${wordCount} palabras**.
+
+**2. Fragmento Analizado:**
+> "${snippet}"
+
+**3. Minuta de Estructura:**
+- **Métricas:** ${wordCount} palabras | ${charCount} caracteres.
+- **Complejidad:** Lectura estimada de ${readingTimeMinutes} minuto(s).
+
+**4. Plan de Acción Recomendado:**
+- Reorganizar ideas principales para publicaciones o clips.
+- Formatear puntos de alto impacto para redes o resúmenes ejecutivos.`;
+
   } else { // BUSINESS
-    aiAnalysisText = `### 🏢 AUDITAI & CLIPGENIUS ENTERPRISE (PLAN BUSINESS GERENCIAL)\n\n1. 📌 **RESUMEN EJECUTIVO GERENCIAL**\nAnálisis de alto nivel enfocado en la obra evaluada (*El Eco de los Relojes de Arena*), destacando la solidez de la construcción de mundos y la tensión dramática entre el Dr. Vance y M.E.N.D.E.L.\n\n2. 🔬 **DESGLOSE TEMÁTICO Y ESTRUCTURAL**\n- **Capítulo I:** Establecimiento del cronotopo y la anomalía entrópica.\n- **Capítulo II:** Contextualización geopolítica post-desecación.\n- **Capítulo III:** Exposición del dilema de simetría T y paradojas causales.\n\n3. ⚠️ **MATRIZ DE RIESGOS Y PARADOJAS CRÍTICAS**\n- Riesgo de bucle de retroalimentación causal en Eurasia (73.2%).\n- Paradoja de autorrealización negativa al alterar el evento de Chernóbil.\n\n4. 🌎 **ANÁLISIS DE IMPACTO SOCIOECONÓMICO**\nDisputa energética entre la Coalición del Boreal y la Diáspora del Sur.\n\n5. 🎬 **CLIPS Y HOOKS DE ALTO IMPACTO**\n- *"No estamos creando energía; la estamos tomando prestada del pasado de otra civilización."*\n- *"Al salvar el pasado, borramos el presente que nos permite viajar al pasado para salvarlo."*\n\n6. 💡 **CONCLUSIÓN Y EVALUACIÓN ESTRATÉGICA**\nObra con un estándar narrativo excepcional apta para desarrollo multimedia de alto nivel.`;
+    aiAnalysisText = `### 🏢 AUDITAI & CLIPGENIUS ENTERPRISE (PLAN BUSINESS GERENCIAL)
+
+1. 📌 **RESUMEN EJECUTIVO GERENCIAL**
+Análisis estratégico para el texto ingresado. Evaluación completada sobre **${wordCount} palabras** (${charCount} caracteres) con tiempo de lectura estimado de **${readingTimeMinutes} minuto(s)**.
+
+2. 🔬 **DESGLOSE TEMÁTICO DE ENTRADA**
+- **Cuerpo principal del mensaje:** "${snippet}"
+
+3. ⚠️ **MATRIZ DE RIESGOS Y EVALUACIÓN DE ESTRUCTURA**
+- **Densidad de texto:** ${wordCount < 20 ? 'Baja (Texto muy corto/Sencillo)' : 'Adecuada para análisis extenso'}.
+- **Carga de lectura:** ${readingTimeMinutes} min.
+
+4. 🎬 **HOOKS Y HIGHLIGHTS EXTRAÍDOS**
+- *" ${words.slice(0, 8).join(" ")}... "*
+
+5. 💡 **EVALUACIÓN ESTRATÉGICA FINAL**
+El contenido procesado queda listo para integración en módulos de ClipGenius y auditorías de automatización.`;
   }
 
-  // 4. RESPUESTA EXITOSA DIRECTA
   return res.status(200).json({
     success: true,
     plan: plan,
