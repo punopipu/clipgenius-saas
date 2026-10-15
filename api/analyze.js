@@ -53,7 +53,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Por favor ingresa un texto o transcripción para analizar.' });
   }
 
-  // 3. PROMPT PERSONALIZADO SEGÚN EL PLAN DE SUSCRIPCIÓN
+  // 3. PROMPT PERSONALIZADO SEGÚN EL PLAN DE SUBSCRIPCIÓN
   let systemPrompt = "";
 
   if (plan === "BASIC") {
@@ -63,7 +63,7 @@ export default async function handler(req, res) {
   } else if (plan === "PRO") {
     systemPrompt = `Eres un auditor e investigador sénior de IA (Plan Pro). Analiza el siguiente texto y entrega:
 1. Resumen Ejecutivo Estructurado.
-2. Minuta de Puntos Clave y Decisiones Tomadas.
+2. Minuta de Puntos Clave y Decisions Tomadas.
 3. Compromisos, Acciones a Seguir y Plan de Trabajo.
 4. Transcripción/Estructuración limpia del contenido.`;
   } else { // BUSINESS
@@ -78,45 +78,39 @@ export default async function handler(req, res) {
   }
 
   try {
-    const geminiApiKey = process.env.GEMINI_API_KEY || "AQ.Ab8RN6JQYXOK317iDYMN2N0J6rNrtvHfmdQOwi8bLMFZ7uMlCQ";
+    const geminiApiKey = process.env.GEMINI_API_KEY;
     if (!geminiApiKey) {
-      return res.status(500).json({ error: 'Falta configurar la variable GEMINI_API_KEY en el servidor.' });
+      return res.status(500).json({ error: 'Falta configurar la variable GEMINI_API_KEY en Vercel.' });
     }
 
-    // Detectar si es un Bearer Token (AQ.) o API Key tradicional (AIzaSy)
-    const isOAuthToken = geminiApiKey.startsWith("AQ.");
-
-    const url = isOAuthToken
-      ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`
-      : `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`;
-
-    const headers = { 'Content-Type': 'application/json' };
-    if (isOAuthToken) {
-      headers['Authorization'] = `Bearer ${geminiApiKey}`;
-    }
-
-    // 4. LLAMADA REAL A LA API DE GEMINI
-    const geminiResponse = await fetch(url, {
-      method: 'POST',
-      headers: headers,
-      body: JSON.stringify({
-        contents: [
-          {
-            role: 'user',
-            parts: [
-              { text: `${systemPrompt}\n\n--- TEXTO A ANALIZAR ---\n${content}` }
-            ]
-          }
-        ]
-      })
-    });
+    // 4. LLAMADA REAL A LA API DE GEMINI USANDO BEARER TOKEN (PARA TOKENS QUE EMPIEZAN CON AQ.)
+    const geminiResponse = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${geminiApiKey}`
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              role: 'user',
+              parts: [
+                { text: `${systemPrompt}\n\n--- TEXTO A ANALIZAR ---\n${content}` }
+              ]
+            }
+          ]
+        })
+      }
+    );
 
     const geminiData = await geminiResponse.json();
 
     if (!geminiResponse.ok) {
       console.error("Error Gemini API:", geminiData);
       return res.status(500).json({ 
-        error: `Error Gemini (${geminiResponse.status}): ${geminiData.error?.message || "Revisa la clave de API."}` 
+        error: `Error Gemini (${geminiResponse.status}): ${geminiData.error?.message || "Error de autenticación con el token."}` 
       });
     }
 
