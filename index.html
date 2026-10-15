@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ClipGenius & AuditAI — Suite de Inteligencia Artificial</title>
+  <title>ClipGenius & AuditAI — La Suite Definitiva de Inteligencia C-Level</title>
   <style>
     :root {
       --bg-dark: #07080c;
@@ -53,7 +53,8 @@
     .orb-1 { width: 600px; height: 600px; background: var(--accent-neon-purple); top: -100px; left: -150px; opacity: 0.25; }
     .orb-2 { width: 700px; height: 700px; background: var(--accent-neon-cyan); top: 1200px; right: -200px; opacity: 0.2; }
     .orb-3 { width: 600px; height: 600px; background: var(--accent-neon-pink); top: 2800px; left: -150px; opacity: 0.22; }
-    .orb-4 { width: 800px; height: 800px; background: var(--accent-neon-blue); top: 4200px; right: -250px; opacity: 0.18; }
+    .orb-4 { width: 800px; height: 800px; background: var(--accent-neon-blue); top: 4600px; right: -250px; opacity: 0.18; }
+    .orb-5 { width: 700px; height: 700px; background: var(--accent-neon-purple); top: 6200px; left: -200px; opacity: 0.2; }
 
     /* NAVEGACIÓN LIQUID GLASS */
     nav {
@@ -112,7 +113,7 @@
     .hero {
       margin-top: 160px;
       text-align: center;
-      max-width: 900px;
+      max-width: 950px;
       padding: 0 20px;
       z-index: 1;
     }
@@ -131,7 +132,7 @@
       box-shadow: 0 0 15px rgba(0, 242, 254, 0.15);
     }
     .hero h1 {
-      font-size: 4rem;
+      font-size: 4.2rem;
       font-weight: 800;
       line-height: 1.08;
       letter-spacing: -0.03em;
@@ -145,7 +146,7 @@
       color: var(--text-muted);
       line-height: 1.6;
       margin-bottom: 30px;
-      max-width: 750px;
+      max-width: 800px;
       margin-left: auto;
       margin-right: auto;
     }
@@ -202,7 +203,7 @@
     /* CONSOLA AI INTERACTIVA */
     .console-section {
       width: 90%;
-      max-width: 1000px;
+      max-width: 1050px;
       margin: 60px 0 90px 0;
       z-index: 1;
     }
@@ -274,7 +275,7 @@
       box-shadow: 0 0 25px var(--glow-cyan);
     }
 
-    /* CAJA DE RESULTADOS LIMPIA (ESTILO MODERNO Y HUMANO) */
+    /* CAJA DE RESULTADOS LIMPIA (TEXTO HUMANO) */
     .console-output {
       margin-top: 25px;
       background: rgba(255, 255, 255, 0.03);
@@ -290,8 +291,95 @@
       display: none;
     }
 
+    /* SECCIÓN COMPARATIVA DETALLADA */
+    .comparison-section {
+      width: 90%;
+      max-width: 1200px;
+      margin: 100px 0;
+      z-index: 1;
+    }
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+      margin-top: 50px;
+    }
+    .comp-card {
+      background: var(--glass-card);
+      backdrop-filter: blur(25px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 35px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .comp-card.highlight {
+      border-color: var(--accent-neon-cyan);
+      box-shadow: 0 0 35px var(--glow-cyan);
+    }
+    .comp-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .comp-item {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      padding-left: 20px;
+      position: relative;
+    }
+    .comp-card.highlight .comp-item { color: #fff; }
+    .comp-item::before {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    .bad ::before { content: "❌"; }
+    .mid ::before { content: "⚠️"; }
+    .good ::before { content: "⚡"; }
+
+    /* GUÍA PASO A PASO */
+    .steps-section {
+      width: 90%;
+      max-width: 1100px;
+      margin: 80px 0;
+      z-index: 1;
+    }
+    .steps-container {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      margin-top: 50px;
+    }
+    .step-box {
+      background: var(--glass-card);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 30px;
+      display: flex;
+      gap: 25px;
+      align-items: flex-start;
+    }
+    .step-num {
+      background: linear-gradient(135deg, var(--accent-neon-cyan), var(--accent-neon-purple));
+      color: #000;
+      font-weight: 800;
+      font-size: 1.2rem;
+      min-width: 50px;
+      height: 50px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .step-info h4 { font-size: 1.2rem; margin-bottom: 8px; }
+    .step-info p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; }
+
     /* MÓDULOS Y CARACTERÍSTICAS */
-    .section-title { text-align: center; margin: 100px 0 60px 0; z-index: 1; }
+    .section-title { text-align: center; margin: 100px 0 40px 0; z-index: 1; }
     .section-title h2 { font-size: 2.8rem; font-weight: 700; margin-bottom: 12px; }
     .section-title p { color: var(--text-muted); font-size: 1.1rem; }
 
@@ -390,6 +478,7 @@
       nav .nav-links { display: none; }
       .console-container { padding: 25px; }
       .trial-banner { flex-direction: column; border-radius: 20px; text-align: center; }
+      .step-box { flex-direction: column; }
     }
   </style>
 </head>
@@ -400,12 +489,15 @@
   <div class="glow-orb orb-2"></div>
   <div class="glow-orb orb-3"></div>
   <div class="glow-orb orb-4"></div>
+  <div class="glow-orb orb-5"></div>
 
-  <!-- NAVEGACIÓN -->
+  <!-- NAVEGACIÓN LIQUID GLASS -->
   <nav>
     <div class="nav-logo">ClipGenius & AuditAI</div>
     <ul class="nav-links">
       <li><a href="#console">Consola AI</a></li>
+      <li><a href="#comparativa">Comparativa</a></li>
+      <li><a href="#paso-a-paso">Cómo Funciona</a></li>
       <li><a href="#features">Módulos</a></li>
       <li><a href="#pricing">Planes</a></li>
     </ul>
@@ -414,9 +506,9 @@
 
   <!-- HERO SECTION -->
   <section class="hero">
-    <div class="hero-badge">⚡ Suite de IA Automatizada v2.4 2026</div>
+    <div class="hero-badge">⚡ Suite de IA C-Level Automatizada v2.4 2026</div>
     <h1>Resumen, Viralización y Auditoría C-Level a Velocidad Luz.</h1>
-    <p>Transforma juntas caóticas, audios extensos y documentos densos en minutas impecables, ganchos virales para redes o reportes de auditoría corporativa ejecutiva.</p>
+    <p>Transforma juntas caóticas, audios extensos y documentos densos en minutas impecables, ganchos virales para redes o reportes de auditoría corporativa ejecutiva sin perder segundos.</p>
 
     <!-- BANNER GENERADOR 1-CLIC PRUEBA GRATIS -->
     <div class="trial-banner" id="quickTrialBtn">
@@ -458,6 +550,85 @@
     </div>
   </section>
 
+  <!-- SECCIÓN COMPARATIVA: A MANO vs IA NORMAL vs CLIPGENIUS -->
+  <div class="section-title" id="comparativa">
+    <h2>¿Por qué ClipGenius & AuditAI?</h2>
+    <p>Mira la diferencia abismal entre los métodos tradicionales y nuestra arquitectura dedicada.</p>
+  </div>
+
+  <section class="comparison-section">
+    <div class="comparison-grid">
+      <!-- A MANO -->
+      <div class="comp-card">
+        <div class="comp-title" style="color: #ff5f56;">✍️ Hacerlo a Mano</div>
+        <div class="comp-item bad">Tardas de 2 a 4 horas redactando minutas de una reunión de 60 minutos.</div>
+        <div class="comp-item bad">Se pasan por alto compromisos clave, acuerdos verbales y fechas límite.</div>
+        <div class="comp-item bad">Para creadores: buscar momentos virales requiere volver a ver todo el video completo.</div>
+        <div class="comp-item bad">Alto riesgo de cansancio y sesgo humano en contratos corporativos.</div>
+      </div>
+
+      <!-- IA CONVENCIONAL -->
+      <div class="comp-card">
+        <div class="comp-title" style="color: #ffbd2e;">🤖 IA Convencional (ChatGPT/Genericos)</div>
+        <div class="comp-item mid">Respuestas largas, genéricas y con formato "paja" que nadie lee.</div>
+        <div class="comp-item mid">Debes escribir prompts larguísimos y probar 5 veces para que dé algo decente.</div>
+        <div class="comp-item mid">No detecta riesgos de negociación ni tono de voz de clientes exigentes.</div>
+        <div class="comp-item mid">Tus datos públicos pueden usarse para entrenar modelos de terceros.</div>
+      </div>
+
+      <!-- CLIPGENIUS -->
+      <div class="comp-card highlight">
+        <div class="comp-title" style="color: var(--accent-neon-cyan);">⚡ ClipGenius & AuditAI</div>
+        <div class="comp-item good">Procesamiento en 3 segundos con formato ejecutivo estructurado directo.</div>
+        <div class="comp-item good">Extracción automática de tareas, responsables y compromisos exactos.</div>
+        <div class="comp-item good">Detector de Hooks Virales y marcas de tiempo para YouTube/Spotify al instante.</div>
+        <div class="comp-item good">Bóveda Suiza AES-256: Máxima privacidad para auditorías corporativas.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN PASO A PASO DETALLADO -->
+  <div class="section-title" id="paso-a-paso">
+    <h2>Guía Paso a Paso</h2>
+    <p>Cómo pasar de transcripciones caóticas a reportes o virales en menos de 1 minuto.</p>
+  </div>
+
+  <section class="steps-section">
+    <div class="steps-container">
+      <div class="step-box">
+        <div class="step-num">01</div>
+        <div class="step-info">
+          <h4>Obtén tu Código de Acceso</h4>
+          <p>Usa el botón "1-Clic" superior para probar la herramienta completamente gratis por 7 días o adquiere tu plan mensual para uso permanente.</p>
+        </div>
+      </div>
+
+      <div class="step-box">
+        <div class="step-num">02</div>
+        <div class="step-info">
+          <h4>Pega la Transcripción o Texto</h4>
+          <p>Copia el texto de tu reunión (Zoom, Meet, Teams), el correo denso, o las notas de tu podcast directamente dentro de la Consola AI.</p>
+        </div>
+      </div>
+
+      <div class="step-box">
+        <div class="step-num">03</div>
+        <div class="step-info">
+          <h4>Ejecuta el Análisis Criptográfico</h4>
+          <p>El motor HMAC procesa el contenido, clasifica la información según tu nivel de suscripción y extrae los insights en tiempo récord.</p>
+        </div>
+      </div>
+
+      <div class="step-box">
+        <div class="step-num">04</div>
+        <div class="step-info">
+          <h4>Copia y Ejecuta tus Resultados</h4>
+          <p>Recibe un reporte formateado en texto humano listo para enviar por correo, compartir con tu equipo o publicar como guion en redes sociales.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- CARACTERÍSTICAS Y MÓDULOS -->
   <div class="section-title" id="features">
     <h2>Módulos de Alta Tecnología</h2>
@@ -481,6 +652,24 @@
       <span class="feature-icon">🛡️</span>
       <h3>Audit-Bot C-Level</h3>
       <p>Evalúa el clima de negociación, analiza el tono de voz de los clientes y detecta riesgos contractuales o legales.</p>
+    </div>
+
+    <div class="feature-card">
+      <span class="feature-icon">🔒</span>
+      <h3>Bóveda Suiza AES-256</h3>
+      <p>Privacidad total con encriptación de nivel militar. Tus datos y reportes corporativos nunca entrenan modelos públicos.</p>
+    </div>
+
+    <div class="feature-card">
+      <span class="feature-icon">📱</span>
+      <h3>Optimizador de Shorts & Reels</h3>
+      <p>Convierte transcripciones largas en guiones y copys estructurados listos para grabar y dominar las redes sociales.</p>
+    </div>
+
+    <div class="feature-card">
+      <span class="feature-icon">🔑</span>
+      <h3>Acceso HMAC Blindado</h3>
+      <p>Sistema de acceso basado en tokens criptográficos HMAC SHA-256 para total control de licencias y seguridad.</p>
     </div>
   </section>
 
