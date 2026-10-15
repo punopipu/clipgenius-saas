@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 
-// Clave secreta HMAC (obtenida de las variables de entorno de Vercel o valor por defecto)
+// Clave secreta HMAC
 const SECRET_KEY = process.env.MAKE_HMAC_SECRET || 'MiClaveUltraSecreta2026';
 
 /**
@@ -18,7 +18,7 @@ function verifyTokenSignature(payload, signature) {
  * Revisa si una prueba gratuita de 7 días sigue vigente
  */
 function isTrialValid(timestampStr) {
-  const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000; // 7 días en milisegundos
+  const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
   const now = Date.now();
   const tokenTimestamp = parseInt(timestampStr, 10);
 
@@ -29,7 +29,6 @@ function isTrialValid(timestampStr) {
 }
 
 module.exports = async (req, res) => {
-  // Configuración de CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -72,22 +71,24 @@ module.exports = async (req, res) => {
       return res.status(400).json({ error: 'Faltan parámetros requeridos: token y content.' });
     }
 
-    const tokenParts = token.split('-');
+    const tokenParts = token.trim().split('-');
     
     if (tokenParts.length < 3) {
       return res.status(401).json({ error: 'Formato de token inválido.' });
     }
 
-    const planType = tokenParts[0];
-    const timestamp = tokenParts[tokenParts.length - 2];
+    const planType = tokenParts[0].toUpperCase();
     const signature = tokenParts[tokenParts.length - 1];
+    const timestamp = tokenParts[tokenParts.length - 2];
+    
+    // El payload a verificar es exactamente todo lo que va antes de la última firma (separada por guión)
     const payloadToVerify = tokenParts.slice(0, -1).join('-');
 
     // 1. Verificación de firma criptográfica
     try {
       const isValidSig = verifyTokenSignature(payloadToVerify, signature);
       if (!isValidSig) {
-        return res.status(401).json({ error: 'Token no autorizado o manipulado.' });
+        return res.status(401).json({ error: 'Error al verificar la firma del token.' });
       }
     } catch (err) {
       return res.status(401).json({ error: 'Error al verificar la firma del token.' });
