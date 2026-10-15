@@ -150,7 +150,7 @@
       margin-right: auto;
     }
 
-    /* BANNER GENERADOR 1-CLIC DE PRUEBA GRATIS */
+    /* BANNER GENERADOR 1-CLIC PRUEBA GRATIS */
     .trial-banner {
       background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(20px);
@@ -273,15 +273,18 @@
       transform: scale(1.01);
       box-shadow: 0 0 25px var(--glow-cyan);
     }
+
+    /* CAJA DE RESULTADOS LIMPIA (ESTILO MODERNO Y HUMANO) */
     .console-output {
-      margin-top: 20px;
-      background: #000;
-      border: 1px solid rgba(0, 242, 254, 0.2);
-      border-radius: 14px;
-      padding: 20px;
-      font-family: "Courier New", Courier, monospace;
-      font-size: 0.9rem;
-      color: #00ff88;
+      margin-top: 25px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 25px;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      font-size: 0.95rem;
+      color: #f5f5f7;
+      line-height: 1.6;
       min-height: 120px;
       white-space: pre-wrap;
       display: none;
@@ -560,7 +563,7 @@
           }
 
           outputDiv.style.display = 'block';
-          outputDiv.textContent = '✅ ¡Token de prueba de 7 días activado e insertado automáticamente!\n\nHaz clic abajo en "Ejecutar Análisis Criptográfico" para procesar el texto de prueba.';
+          outputDiv.textContent = '✨ ¡Token de prueba de 7 días activado e insertado automáticamente!\n\nHaz clic abajo en "Ejecutar Análisis Criptográfico" para procesar el texto de prueba.';
 
           document.getElementById('console').scrollIntoView({ behavior: 'smooth' });
         } else {
@@ -573,7 +576,7 @@
       }
     });
 
-    // EJECUCIÓN DE CONSULTA EN LA CONSOLA AI
+    // EJECUCIÓN DE CONSULTA EN LA CONSOLA AI (RESPUESTA EN TEXTO LIMPIO Y HUMANO)
     document.getElementById('aiForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -583,7 +586,7 @@
       const submitBtn = document.getElementById('submitBtn');
 
       outputDiv.style.display = 'block';
-      outputDiv.textContent = 'Procesando consulta en el backend de Vercel... Espere un momento...';
+      outputDiv.textContent = 'Procesando consulta... Espere un momento...';
       submitBtn.disabled = true;
 
       try {
@@ -595,13 +598,62 @@
 
         const data = await response.json();
 
-        if (response.ok) {
-          outputDiv.textContent = '=== RESPUESTA EXITOSA DE CLIPGENIUS ===\n\n' + JSON.stringify(data, null, 2);
+        if (response.ok && data.success) {
+          const resData = data.result.data;
+          let textOutput = `✨ RESULTADOS DEL ANÁLISIS (${data.result.plan.toUpperCase()})\n`;
+          textOutput += `──────────────────────────────────────────────────\n\n`;
+
+          // Resumen
+          if (resData.minutaExpress) {
+            textOutput += `📝 RESUMEN EJECUTIVO:\n${resData.minutaExpress}\n\n`;
+          }
+
+          // Tareas y Compromisos
+          if (resData.tareasYCompromisos && resData.tareasYCompromisos.length) {
+            textOutput += `📌 TAREAS Y COMPROMISOS DETECTADOS:\n`;
+            resData.tareasYCompromisos.forEach(item => {
+              textOutput += `  • ${item}\n`;
+            });
+            textOutput += `\n`;
+          }
+
+          // Puntos Clave
+          if (resData.puntosClaveCotidianos && resData.puntosClaveCotidianos.length) {
+            textOutput += `💡 PUNTOS CLAVE:\n`;
+            resData.puntosClaveCotidianos.forEach(item => {
+              textOutput += `  • ${item}\n`;
+            });
+            textOutput += `\n`;
+          }
+
+          // Síntesis
+          if (resData.sintetizadorDeTextos) {
+            textOutput += `🔍 SÍNTESIS GENERAL:\n${resData.sintetizadorDeTextos}\n\n`;
+          }
+
+          // Módulo Creadores
+          if (resData.detectorGanchosVirales) {
+            textOutput += `🎬 GANCHOS VIRALES (HOOKS):\n`;
+            resData.detectorGanchosVirales.forEach(item => textOutput += `  • ${item}\n`);
+            textOutput += `\n⏱️ MARCAS DE TIEMPO (TIMESTAMPS):\n`;
+            resData.timestampsYouTube.forEach(item => textOutput += `  • ${item}\n`);
+            textOutput += `\n`;
+          }
+
+          // Módulo Business
+          if (resData.suiteAuditoria) {
+            textOutput += `🛡️ AUDITORÍA DE RIESGOS:\n`;
+            textOutput += `  • Operativos: ${resData.suiteAuditoria.riesgosOperativos}\n`;
+            textOutput += `  • Legales: ${resData.suiteAuditoria.riesgosLegales}\n`;
+            textOutput += `\n💼 CLIMA DE NEGOCIACIÓN: ${resData.auditBot.climaNegociacion}\n`;
+          }
+
+          outputDiv.textContent = textOutput;
         } else {
-          outputDiv.textContent = '=== ERROR DE ACCESO ===\n\n' + (data.error || 'Error al procesar la solicitud.');
+          outputDiv.textContent = '❌ ERROR: ' + (data.error || 'No se pudo procesar la solicitud.');
         }
       } catch (err) {
-        outputDiv.textContent = '=== ERROR DE CONEXIÓN ===\n\nNo se pudo conectar con el servidor backend.';
+        outputDiv.textContent = '❌ Error de conexión con el servidor.';
       } finally {
         submitBtn.disabled = false;
       }
