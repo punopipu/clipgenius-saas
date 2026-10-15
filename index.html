@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ClipGenius & AuditAI — Planes y Prueba Gratuita</title>
+  <title>ClipGenius & AuditAI — Suite de Inteligencia Artificial</title>
   <style>
-    /* --- VARIABLES GLOBALES & MODO OSCURO --- */
     :root {
-      --bg-dark: #0a0b10;
+      --bg-dark: #07080c;
       --glass-bg: rgba(255, 255, 255, 0.03);
+      --glass-card: rgba(255, 255, 255, 0.04);
       --glass-border: rgba(255, 255, 255, 0.12);
       --glass-highlight: rgba(255, 255, 255, 0.25);
       --text-main: #f5f5f7;
@@ -16,9 +16,10 @@
       --accent-neon-cyan: #00f2fe;
       --accent-neon-purple: #9d50bb;
       --accent-neon-blue: #4facfe;
-      --glow-casual: rgba(0, 242, 254, 0.35);
-      --glow-creadores: rgba(157, 80, 187, 0.45);
-      --glow-business: rgba(79, 172, 254, 0.4);
+      --accent-neon-pink: #f093fb;
+      --glow-cyan: rgba(0, 242, 254, 0.35);
+      --glow-purple: rgba(157, 80, 187, 0.45);
+      --glow-blue: rgba(79, 172, 254, 0.4);
     }
 
     * {
@@ -26,6 +27,7 @@
       margin: 0;
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+      scroll-behavior: smooth;
     }
 
     body {
@@ -35,363 +37,576 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 40px 20px;
+      padding: 0;
       overflow-x: hidden;
       position: relative;
     }
 
-    /* --- FONDOS DE NEÓN / ORBES GLOW --- */
+    /* ORBES GLOW NEÓN DE FONDO */
     .glow-orb {
       position: absolute;
       border-radius: 50%;
-      filter: blur(120px);
+      filter: blur(140px);
       z-index: 0;
       pointer-events: none;
     }
-    .orb-1 {
-      width: 400px;
-      height: 400px;
-      background: var(--accent-neon-purple);
-      top: -50px;
-      left: -100px;
-      opacity: 0.3;
-    }
-    .orb-2 {
-      width: 500px;
-      height: 500px;
-      background: var(--accent-neon-cyan);
-      bottom: -100px;
-      right: -100px;
-      opacity: 0.25;
-    }
+    .orb-1 { width: 600px; height: 600px; background: var(--accent-neon-purple); top: -100px; left: -150px; opacity: 0.25; }
+    .orb-2 { width: 700px; height: 700px; background: var(--accent-neon-cyan); top: 1200px; right: -200px; opacity: 0.2; }
+    .orb-3 { width: 600px; height: 600px; background: var(--accent-neon-pink); top: 2800px; left: -150px; opacity: 0.22; }
+    .orb-4 { width: 800px; height: 800px; background: var(--accent-neon-blue); top: 4200px; right: -250px; opacity: 0.18; }
 
-    /* --- ENCABEZADO --- */
-    header {
-      text-align: center;
-      margin-bottom: 50px;
-      z-index: 1;
-      max-width: 700px;
+    /* NAVEGACIÓN LIQUID GLASS */
+    nav {
+      position: fixed;
+      top: 20px;
+      width: 90%;
+      max-width: 1200px;
+      background: rgba(15, 16, 24, 0.6);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid var(--glass-border);
+      border-radius: 100px;
+      padding: 14px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
-
-    header h1 {
-      font-size: 2.8rem;
+    .nav-logo {
+      font-size: 1.2rem;
       font-weight: 700;
-      letter-spacing: -0.015em;
-      background: linear-gradient(135deg, #ffffff 30%, #86868b 100%);
+      background: linear-gradient(135deg, #fff, var(--accent-neon-cyan));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 12px;
     }
-
-    header p {
-      font-size: 1.15rem;
+    .nav-links {
+      display: flex;
+      gap: 25px;
+      list-style: none;
+    }
+    .nav-links a {
       color: var(--text-muted);
-      line-height: 1.5;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--text-main); }
+    .nav-btn {
+      background: linear-gradient(135deg, var(--accent-neon-cyan), var(--accent-neon-blue));
+      color: #000;
+      padding: 8px 18px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .nav-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px var(--glow-cyan);
     }
 
-    /* --- PRUEBA GRATUITA LIQUID BANNER --- */
+    /* HERO SECTION */
+    .hero {
+      margin-top: 160px;
+      text-align: center;
+      max-width: 900px;
+      padding: 0 20px;
+      z-index: 1;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(15px);
+      border: 1px solid var(--glass-border);
+      padding: 8px 20px;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      color: var(--accent-neon-cyan);
+      margin-bottom: 25px;
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.15);
+    }
+    .hero h1 {
+      font-size: 4rem;
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #ffffff 40%, #86868b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+    }
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 30px;
+      max-width: 750px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* BANNER GENERADOR 1-CLIC DE PRUEBA GRATIS */
     .trial-banner {
       background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--accent-neon-cyan);
       border-radius: 100px;
-      padding: 12px 28px;
-      margin-bottom: 40px;
-      z-index: 1;
-      display: flex;
+      padding: 14px 30px;
+      margin: 0 auto 40px auto;
+      display: inline-flex;
       align-items: center;
       gap: 15px;
-      box-shadow: 0 0 25px var(--glow-casual);
-      transition: transform 0.3s ease;
+      box-shadow: 0 0 30px var(--glow-cyan);
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
     }
     .trial-banner:hover {
-      transform: scale(1.02);
+      transform: scale(1.03);
+      box-shadow: 0 0 45px var(--glow-cyan);
     }
     .trial-tag {
       background: linear-gradient(135deg, var(--accent-neon-cyan), var(--accent-neon-blue));
       color: #000;
-      font-weight: 700;
+      font-weight: 800;
       font-size: 0.75rem;
-      padding: 4px 10px;
+      padding: 4px 12px;
       border-radius: 20px;
       text-transform: uppercase;
     }
-    .trial-text {
-      font-size: 0.95rem;
-      color: var(--text-main);
-    }
-    .trial-btn {
-      color: var(--accent-neon-cyan);
+    .trial-text { font-size: 0.95rem; color: var(--text-main); }
+    .trial-btn { color: var(--accent-neon-cyan); font-weight: 700; font-size: 0.95rem; }
+
+    /* BOTONES GLOBALES */
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-neon-purple), #5b247a);
+      color: #fff;
+      padding: 16px 36px;
+      border-radius: 16px;
+      font-size: 1rem;
+      font-weight: 700;
       text-decoration: none;
-      font-weight: 600;
-      font-size: 0.95rem;
-      margin-left: 10px;
+      box-shadow: 0 0 30px var(--glow-purple);
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+    .btn-primary:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 0 45px var(--glow-purple);
     }
 
-    /* --- REJILLA DE PLANES (GRID) --- */
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 30px;
-      max-width: 1100px;
-      width: 100%;
+    /* CONSOLA AI INTERACTIVA */
+    .console-section {
+      width: 90%;
+      max-width: 1000px;
+      margin: 60px 0 90px 0;
       z-index: 1;
     }
+    .console-container {
+      background: rgba(10, 11, 16, 0.85);
+      backdrop-filter: blur(40px);
+      border: 1px solid var(--glass-border);
+      border-radius: 28px;
+      padding: 40px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 242, 254, 0.1);
+    }
+    .console-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--glass-border);
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+    .console-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--accent-neon-cyan);
+    }
+    .dots { display: flex; gap: 8px; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-red { background: #ff5f56; }
+    .dot-yellow { background: #ffbd2e; }
+    .dot-green { background: #27c93f; }
 
-    /* --- TARJETAS LIQUID GLASS --- */
-    .glass-card {
-      background: var(--glass-bg);
-      backdrop-filter: blur(30px);
-      -webkit-backdrop-filter: blur(30px);
+    .console-form { display: flex; flex-direction: column; gap: 20px; }
+    .input-group { display: flex; flex-direction: column; gap: 8px; }
+    .input-group label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .console-input, .console-textarea {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      padding: 14px 18px;
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border 0.3s, box-shadow 0.3s;
+    }
+    .console-input:focus, .console-textarea:focus {
+      border-color: var(--accent-neon-cyan);
+      box-shadow: 0 0 15px var(--glow-cyan);
+    }
+    .console-btn {
+      background: linear-gradient(135deg, var(--accent-neon-cyan), var(--accent-neon-blue));
+      color: #000;
+      border: none;
+      padding: 16px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .console-btn:hover {
+      transform: scale(1.01);
+      box-shadow: 0 0 25px var(--glow-cyan);
+    }
+    .console-output {
+      margin-top: 20px;
+      background: #000;
+      border: 1px solid rgba(0, 242, 254, 0.2);
+      border-radius: 14px;
+      padding: 20px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 0.9rem;
+      color: #00ff88;
+      min-height: 120px;
+      white-space: pre-wrap;
+      display: none;
+    }
+
+    /* MÓDULOS Y CARACTERÍSTICAS */
+    .section-title { text-align: center; margin: 100px 0 60px 0; z-index: 1; }
+    .section-title h2 { font-size: 2.8rem; font-weight: 700; margin-bottom: 12px; }
+    .section-title p { color: var(--text-muted); font-size: 1.1rem; }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+      width: 90%;
+      max-width: 1200px;
+      z-index: 1;
+    }
+    .feature-card {
+      background: var(--glass-card);
+      backdrop-filter: blur(20px);
       border: 1px solid var(--glass-border);
       border-radius: 24px;
-      padding: 35px 30px;
+      padding: 35px;
+      transition: all 0.4s ease;
+    }
+    .feature-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+    .feature-icon { font-size: 2.2rem; margin-bottom: 20px; display: inline-block; }
+    .feature-card h3 { font-size: 1.4rem; margin-bottom: 12px; }
+    .feature-card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
+
+    /* PLANES Y PRECIOS */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+      width: 90%;
+      max-width: 1200px;
+      z-index: 1;
+      margin-bottom: 80px;
+    }
+    .pricing-card {
+      background: var(--glass-card);
+      backdrop-filter: blur(30px);
+      border: 1px solid var(--glass-border);
+      border-radius: 28px;
+      padding: 40px 35px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       position: relative;
-      overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.4s ease;
     }
+    .pricing-card:hover { transform: translateY(-10px); }
+    .card-casual:hover { border-color: var(--accent-neon-cyan); box-shadow: 0 20px 40px var(--glow-cyan); }
+    .card-creadores { border-color: rgba(157, 80, 187, 0.4); }
+    .card-creadores:hover { border-color: var(--accent-neon-purple); box-shadow: 0 20px 40px var(--glow-purple); }
+    .card-business:hover { border-color: var(--accent-neon-blue); box-shadow: 0 20px 40px var(--glow-blue); }
 
-    /* Reflejo estilo líquido superior */
-    .glass-card::before {
-      content: '';
+    .badge-pop {
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--glass-highlight), transparent);
-    }
-
-    .glass-card:hover {
-      transform: translateY(-8px);
-      border-color: rgba(255, 255, 255, 0.3);
-    }
-
-    /* Efectos Neón Glow Específicos */
-    .card-casual:hover {
-      box-shadow: 0 20px 40px var(--glow-casual);
-      border-color: var(--accent-neon-cyan);
-    }
-    .card-creadores {
-      border-color: rgba(157, 80, 187, 0.4);
-    }
-    .card-creadores:hover {
-      box-shadow: 0 20px 40px var(--glow-creadores);
-      border-color: var(--accent-neon-purple);
-    }
-    .card-business:hover {
-      box-shadow: 0 20px 40px var(--glow-business);
-      border-color: var(--accent-neon-blue);
-    }
-
-    /* Insignia Popular */
-    .badge-popular {
-      position: absolute;
-      top: 20px;
-      right: 20px;
+      top: 25px;
+      right: 25px;
       background: linear-gradient(135deg, var(--accent-neon-purple), #654ea3);
       color: #fff;
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       font-weight: 700;
-      padding: 4px 12px;
-      border-radius: 12px;
+      padding: 5px 14px;
+      border-radius: 20px;
       text-transform: uppercase;
-      box-shadow: 0 0 15px var(--glow-creadores);
+      box-shadow: 0 0 15px var(--glow-purple);
     }
-
-    /* --- CONTENIDO INTERNO DE TARJETAS --- */
-    .plan-header h2 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-    .plan-header p {
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      margin-bottom: 25px;
-      line-height: 1.4;
-    }
-
-    .plan-price {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 25px;
-      display: flex;
-      align-items: baseline;
-      gap: 5px;
-    }
-    .plan-price span {
-      font-size: 1rem;
-      color: var(--text-muted);
-      font-weight: 400;
-    }
-
-    /* Lista de funciones */
-    .features-list {
-      list-style: none;
-      margin-bottom: 35px;
-    }
-    .features-list li {
-      font-size: 0.92rem;
+    .plan-price { font-size: 3rem; font-weight: 800; margin: 20px 0; }
+    .plan-price span { font-size: 1rem; color: var(--text-muted); font-weight: 400; }
+    .pricing-features { list-style: none; margin-bottom: 35px; }
+    .pricing-features li {
+      font-size: 0.95rem;
       color: #e1e1e6;
       margin-bottom: 14px;
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       gap: 10px;
-      line-height: 1.4;
     }
-    .features-list li::before {
-      content: "✦";
-      color: var(--accent-neon-cyan);
-      font-size: 0.8rem;
-      margin-top: 2px;
-    }
-    .card-creadores .features-list li::before {
-      color: var(--accent-neon-purple);
-    }
-    .card-business .features-list li::before {
-      color: var(--accent-neon-blue);
-    }
+    .pricing-features li::before { content: "✓"; color: var(--accent-neon-cyan); font-weight: bold; }
 
-    /* --- BOTONES GLOW CON ESTILO APPLE --- */
-    .btn-action {
+    /* FOOTER */
+    footer {
       width: 100%;
-      padding: 14px 0;
-      border-radius: 14px;
-      border: 1px solid var(--glass-border);
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-main);
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      backdrop-filter: blur(10px);
-      transition: all 0.3s ease;
+      border-top: 1px solid var(--glass-border);
+      background: rgba(5, 6, 10, 0.9);
+      padding: 60px 20px;
       text-align: center;
-      text-decoration: none;
-      display: block;
+      z-index: 1;
     }
+    footer p { color: var(--text-muted); font-size: 0.9rem; }
 
-    .btn-action:hover {
-      background: rgba(255, 255, 255, 0.2);
-      border-color: rgba(255, 255, 255, 0.4);
-      color: #fff;
-    }
-
-    .btn-glow-creadores {
-      background: linear-gradient(135deg, var(--accent-neon-purple), #5b247a);
-      border: none;
-      box-shadow: 0 0 20px rgba(157, 80, 187, 0.5);
-    }
-    .btn-glow-creadores:hover {
-      box-shadow: 0 0 30px rgba(157, 80, 187, 0.8);
-      background: linear-gradient(135deg, #b06ab3, #4568dc);
-    }
-
-    /* --- RESPONSIVE --- */
     @media (max-width: 768px) {
-      .pricing-grid {
-        grid-template-columns: 1fr;
-      }
-      header h1 {
-        font-size: 2.1rem;
-      }
-      .trial-banner {
-        flex-direction: column;
-        border-radius: 20px;
-        text-align: center;
-      }
+      .hero h1 { font-size: 2.5rem; }
+      nav .nav-links { display: none; }
+      .console-container { padding: 25px; }
+      .trial-banner { flex-direction: column; border-radius: 20px; text-align: center; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ORBES DE LUZ NEÓN DE FONDO -->
+  <!-- ORBES DE LUZ EN EL FONDO -->
   <div class="glow-orb orb-1"></div>
   <div class="glow-orb orb-2"></div>
+  <div class="glow-orb orb-3"></div>
+  <div class="glow-orb orb-4"></div>
 
-  <!-- ENCABEZADO PRINCIPAL -->
-  <header>
-    <h1>ClipGenius & AuditAI</h1>
-    <p>La suite de inteligencia artificial diseñada para resumir, crear y auditar a velocidad luz.</p>
-  </header>
+  <!-- NAVEGACIÓN -->
+  <nav>
+    <div class="nav-logo">ClipGenius & AuditAI</div>
+    <ul class="nav-links">
+      <li><a href="#console">Consola AI</a></li>
+      <li><a href="#features">Módulos</a></li>
+      <li><a href="#pricing">Planes</a></li>
+    </ul>
+    <a href="https://tally.so/r/BzOgeY" target="_blank" class="nav-btn">Suscribirme</a>
+  </nav>
 
-  <!-- BANNER DE PRUEBA GRATUITA DE 7 DÍAS -->
-  <div class="trial-banner">
-    <span class="trial-tag">Nuevo</span>
-    <span class="trial-text">Obtén 7 días de acceso completo al Plan Casual sin costo.</span>
-    <a href="#trial" class="trial-btn">Activar Prueba →</a>
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero-badge">⚡ Suite de IA Automatizada v2.4 2026</div>
+    <h1>Resumen, Viralización y Auditoría C-Level a Velocidad Luz.</h1>
+    <p>Transforma juntas caóticas, audios extensos y documentos densos en minutas impecables, ganchos virales para redes o reportes de auditoría corporativa ejecutiva.</p>
+
+    <!-- BANNER GENERADOR 1-CLIC PRUEBA GRATIS -->
+    <div class="trial-banner" id="quickTrialBtn">
+      <span class="trial-tag">1-Clic</span>
+      <span class="trial-text">Obtener un Token de Prueba Gratis de 7 Días e insertarlo al instante.</span>
+      <span class="trial-btn">⚡ Probar Ahora →</span>
+    </div>
+  </section>
+
+  <!-- CONSOLA INTERACTIVA AI -->
+  <section id="console" class="console-section">
+    <div class="console-container">
+      <div class="console-header">
+        <div class="console-title">
+          <span>❖</span> Consola Ejecutiva de Procesamiento AI
+        </div>
+        <div class="dots">
+          <div class="dot dot-red"></div>
+          <div class="dot dot-yellow"></div>
+          <div class="dot dot-green"></div>
+        </div>
+      </div>
+
+      <form class="console-form" id="aiForm">
+        <div class="input-group">
+          <label>Código de Acceso / Token de Suscripción</label>
+          <input type="text" id="tokenInput" class="console-input" placeholder="Ej: TRIAL-CASUAL-1760571720000-a1b2c3d4... (O usa el botón 1-Clic de arriba)" required>
+        </div>
+
+        <div class="input-group">
+          <label>Contenido / Transcripción a Procesar</label>
+          <textarea id="contentInput" class="console-textarea" rows="5" placeholder="Pega aquí el texto de tu reunión, correo extenso o ideas para analizar..." required></textarea>
+        </div>
+
+        <button type="submit" class="console-btn" id="submitBtn">Ejecutar Análisis Criptográfico</button>
+      </form>
+
+      <div id="consoleOutput" class="console-output"></div>
+    </div>
+  </section>
+
+  <!-- CARACTERÍSTICAS Y MÓDULOS -->
+  <div class="section-title" id="features">
+    <h2>Módulos de Alta Tecnología</h2>
+    <p>Una arquitectura diseñada para usuarios individuales, creadores y empresas exigentes.</p>
   </div>
 
-  <!-- SECCIÓN DE PLANES -->
-  <div class="pricing-grid">
-
-    <!-- 🟢 1. PLAN CASUAL -->
-    <div class="glass-card card-casual">
-      <div>
-        <div class="plan-header">
-          <h2>Plan Casual</h2>
-          <p>Ideal para personas independientes y uso cotidiano que buscan organizarse sin esfuerzo.</p>
-        </div>
-        <div class="plan-price">
-          $9 <span>/ mes</span>
-        </div>
-        <ul class="features-list">
-          <li>Minuta express y resumen en 3 segundos</li>
-          <li>Extractor automático de tareas y compromisos</li>
-          <li>Sintetizador de correos y documentos densos</li>
-          <li>Buscador de puntos clave cotidianos</li>
-        </ul>
-      </div>
-      <a href="#" class="btn-action">Iniciar con Plan Casual</a>
+  <section class="features-grid">
+    <div class="feature-card">
+      <span class="feature-icon">⚡</span>
+      <h3>Minutas Express 3s</h3>
+      <p>Sintetiza reuniones de 3 horas en resúmenes ejecutivos claros con asignación automática de tareas y responsables.</p>
     </div>
 
-    <!-- 🟣 2. PLAN CREADORES (PRO) -->
-    <div class="glass-card card-creadores">
-      <span class="badge-popular">Más Popular</span>
-      <div>
-        <div class="plan-header">
-          <h2>Plan Creadores</h2>
-          <p>Para podcasters, YouTubers y creadores que transforman material en contenido viral.</p>
-        </div>
-        <div class="plan-price">
-          $24 <span>/ mes</span>
-        </div>
-        <ul class="features-list">
-          <li>Todo lo incluido en el Plan Casual</li>
-          <li>Detector automático de ganchos (Hooks) virales</li>
-          <li>Generador de timestamps para YouTube y Spotify</li>
-          <li>Copys y guiones optimizados para Shorts/TikTok</li>
-        </ul>
-      </div>
-      <a href="#" class="btn-action btn-glow-creadores">Comenzar como Creador</a>
+    <div class="feature-card">
+      <span class="feature-icon">🎬</span>
+      <h3>Detector de Hooks Virales</h3>
+      <p>Identifica los momentos más potentes de tu contenido y genera marcas de tiempo (timestamps) para YouTube y Spotify.</p>
     </div>
 
-    <!-- 🔵 3. PLAN BUSINESS -->
-    <div class="glass-card card-business">
+    <div class="feature-card">
+      <span class="feature-icon">🛡️</span>
+      <h3>Audit-Bot C-Level</h3>
+      <p>Evalúa el clima de negociación, analiza el tono de voz de los clientes y detecta riesgos contractuales o legales.</p>
+    </div>
+  </section>
+
+  <!-- PLANES Y SUSCRIPCIONES -->
+  <div class="section-title" id="pricing">
+    <h2>Planes y Suscripciones</h2>
+    <p>Acceso inmediato con prueba gratuita o suscripción automática.</p>
+  </div>
+
+  <section class="pricing-grid">
+    <div class="pricing-card card-casual">
       <div>
-        <div class="plan-header">
-          <h2>Plan Business</h2>
-          <p>Para ejecutivos, consultores y empresas que requieren control, auditoría y máxima seguridad.</p>
-        </div>
-        <div class="plan-price">
-          $79 <span>/ mes</span>
-        </div>
-        <ul class="features-list">
+        <h3>Plan Casual</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 5px;">Para usuarios generales e independientes.</p>
+        <div class="plan-price">$9 <span>/ mes</span></div>
+        <ul class="pricing-features">
+          <li>Minuta express y resúmenes ejecutivos</li>
+          <li>Extractor de tareas y pendientes</li>
+          <li>Sintetizador de correos densos</li>
+        </ul>
+      </div>
+      <a href="https://tally.so/r/BzOgeY" target="_blank" class="btn-primary" style="background: linear-gradient(135deg, var(--accent-neon-cyan), var(--accent-neon-blue)); color: #000; text-align: center;">Suscribirme</a>
+    </div>
+
+    <div class="pricing-card card-creadores">
+      <span class="badge-pop">Popular</span>
+      <div>
+        <h3>Plan Creadores</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 5px;">Para YouTubers, podcasters y streamers.</p>
+        <div class="plan-price">$24 <span>/ mes</span></div>
+        <ul class="pricing-features">
+          <li>Todo lo incluido en Plan Casual</li>
+          <li>Detector de Hooks y ganchos virales</li>
+          <li>Timestamps para YouTube / Spotify</li>
+        </ul>
+      </div>
+      <a href="https://tally.so/r/BzOgeY" target="_blank" class="btn-primary" style="text-align: center;">Suscribirme</a>
+    </div>
+
+    <div class="pricing-card card-business">
+      <div>
+        <h3>Plan Business</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 5px;">Para empresas, consultores y ejecutivos.</p>
+        <div class="plan-price">$79 <span>/ mes</span></div>
+        <ul class="pricing-features">
           <li>Acceso total a Casual + Creadores</li>
-          <li>Suite de auditoría ejecutiva y detección de riesgos</li>
-          <li>Audit-Bot: Evaluación de tono de cliente y negociación</li>
-          <li>Bóveda Suiza: Encriptación estricta AES-256 C-Level</li>
+          <li>Suite de auditoría de riesgos contractuales</li>
+          <li>Encriptación de Bóveda Suiza C-Level</li>
         </ul>
       </div>
-      <a href="#" class="btn-action">Adquirir Suite Business</a>
+      <a href="https://tally.so/r/BzOgeY" target="_blank" class="btn-primary" style="background: linear-gradient(135deg, var(--accent-neon-blue), #2b5876); text-align: center;">Suscribirme</a>
     </div>
+  </section>
 
-  </div>
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 ClipGenius & AuditAI. Todos los derechos reservados.</p>
+  </footer>
+
+  <!-- SCRIPT CONSOLA & GENERADOR 1-CLIC -->
+  <script>
+    // GENERADOR DE TOKEN DE PRUEBA DE 7 DÍAS EN 1-CLIC
+    document.getElementById('quickTrialBtn').addEventListener('click', async () => {
+      const trialBtn = document.getElementById('quickTrialBtn');
+      const tokenInput = document.getElementById('tokenInput');
+      const contentInput = document.getElementById('contentInput');
+      const outputDiv = document.getElementById('consoleOutput');
+
+      try {
+        trialBtn.style.opacity = '0.6';
+        
+        const response = await fetch('/api/analyze', { method: 'GET' });
+        const data = await response.json();
+
+        if (data.success) {
+          tokenInput.value = data.token;
+          
+          if (!contentInput.value.trim()) {
+            contentInput.value = "Transcripción de prueba: En la reunión de hoy acordamos lanzar la nueva campaña el próximo lunes. Juan se encarga de los diseños y María revisará el presupuesto final antes del viernes.";
+          }
+
+          outputDiv.style.display = 'block';
+          outputDiv.textContent = '✅ ¡Token de prueba de 7 días activado e insertado automáticamente!\n\nHaz clic abajo en "Ejecutar Análisis Criptográfico" para procesar el texto de prueba.';
+
+          document.getElementById('console').scrollIntoView({ behavior: 'smooth' });
+        } else {
+          alert('Ocurrió un problema al obtener el token de prueba.');
+        }
+      } catch (err) {
+        alert('Error de conexión con la API.');
+      } finally {
+        trialBtn.style.opacity = '1';
+      }
+    });
+
+    // EJECUCIÓN DE CONSULTA EN LA CONSOLA AI
+    document.getElementById('aiForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const token = document.getElementById('tokenInput').value.trim();
+      const content = document.getElementById('contentInput').value.trim();
+      const outputDiv = document.getElementById('consoleOutput');
+      const submitBtn = document.getElementById('submitBtn');
+
+      outputDiv.style.display = 'block';
+      outputDiv.textContent = 'Procesando consulta en el backend de Vercel... Espere un momento...';
+      submitBtn.disabled = true;
+
+      try {
+        const response = await fetch('/api/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token, content })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          outputDiv.textContent = '=== RESPUESTA EXITOSA DE CLIPGENIUS ===\n\n' + JSON.stringify(data, null, 2);
+        } else {
+          outputDiv.textContent = '=== ERROR DE ACCESO ===\n\n' + (data.error || 'Error al procesar la solicitud.');
+        }
+      } catch (err) {
+        outputDiv.textContent = '=== ERROR DE CONEXIÓN ===\n\nNo se pudo conectar con el servidor backend.';
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
 
 </body>
 </html>
