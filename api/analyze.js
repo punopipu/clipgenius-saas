@@ -78,36 +78,45 @@ export default async function handler(req, res) {
   }
 
   try {
-    const geminiApiKey = process.env.GEMINI_API_KEY;
+    const geminiApiKey = process.env.GEMINI_API_KEY || "AQ.Ab8RN6JQYXOK317iDYMN2N0J6rNrtvHfmdQOwi8bLMFZ7uMlCQ";
     if (!geminiApiKey) {
       return res.status(500).json({ error: 'Falta configurar la variable GEMINI_API_KEY en el servidor.' });
     }
 
+    // Detectar si es un Bearer Token (AQ.) o API Key tradicional (AIzaSy)
+    const isOAuthToken = geminiApiKey.startsWith("AQ.");
+
+    const url = isOAuthToken
+      ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`
+      : `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`;
+
+    const headers = { 'Content-Type': 'application/json' };
+    if (isOAuthToken) {
+      headers['Authorization'] = `Bearer ${geminiApiKey}`;
+    }
+
     // 4. LLAMADA REAL A LA API DE GEMINI
-    const geminiResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [
-            {
-              role: 'user',
-              parts: [
-                { text: `${systemPrompt}\n\n--- TEXTO A ANALIZAR ---\n${content}` }
-              ]
-            }
-          ]
-        })
-      }
-    );
+    const geminiResponse = await fetch(url, {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify({
+        contents: [
+          {
+            role: 'user',
+            parts: [
+              { text: `${systemPrompt}\n\n--- TEXTO A ANALIZAR ---\n${content}` }
+            ]
+          }
+        ]
+      })
+    });
 
     const geminiData = await geminiResponse.json();
 
     if (!geminiResponse.ok) {
       console.error("Error Gemini API:", geminiData);
       return res.status(500).json({ 
-        error: "Error al comunicarse con el motor de IA. Revisa tu GEMINI_API_KEY." 
+        error: `Error Gemini (${geminiResponse.status}): ${geminiData.error?.message || "Revisa la clave de API."}` 
       });
     }
 
