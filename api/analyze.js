@@ -1,7 +1,8 @@
 const crypto = require('crypto');
 
-// Clave secreta fija unificada entre Make y Vercel
 const SECRET_KEY = 'MiClaveUltraSecreta2026';
+// Pega aquí tu API Key de Google AI Studio:
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'AQ.Ab8RN6JQYXOK317iDYMN2N0J6rNrtvHfmdQOwi8bLMFZ7uMlCQ';
 
 function verifyTokenSignature(payload, signature) {
   try {
@@ -18,20 +19,63 @@ function verifyTokenSignature(payload, signature) {
     if (bufferExpected.length !== bufferReceived.length) return false;
     return crypto.timingSafeEqual(bufferExpected, bufferReceived);
   } catch (error) {
-    console.error('Error al verificar firma HMAC:', error);
     return false;
   }
 }
 
 function isTrialValid(timestampStr) {
   const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
-  const CLOCK_SKEW_TOLERANCE_MS = 10 * 60 * 1000; // 10 minutos de tolerancia de reloj
+  const CLOCK_SKEW_TOLERANCE_MS = 10 * 60 * 1000;
   const now = Date.now();
   const tokenTimestamp = parseInt(timestampStr, 10);
 
   if (isNaN(tokenTimestamp)) return false;
   const age = now - tokenTimestamp;
   return age >= -CLOCK_SKEW_TOLERANCE_MS && age <= SEVEN_DAYS_MS;
+}
+
+// Función para procesar el texto con la IA real
+async function analyzeWithGemini(content, planPrefix) {
+  const systemPrompt = `Eres el motor de IA ejecutiva de ClipGenius & AuditAI. 
+Tu tarea es analizar la transcripción o texto ingresado y devolver UNICAMENTE un objeto JSON estricto con el siguiente formato exacto, sin bloques de código Markdown (\`\`\`json):
+
+{
+  "minutaExpress": "Un resumen ejecutivo conciso y profesional del texto de 2 a 4 párrafos.",
+  "tareasYCompromisos": ["Tarea o compromiso 1 detectado en el texto con responsable si existe", "Tarea 2..."],
+  "puntosClaveCotidianos": ["Punto clave 1 extraído del texto", "Punto clave 2..."],
+  "sintetizadorDeTextos": "Una síntesis o conclusión estratégica del texto."
+  ${planPrefix === 'PRO' || planPrefix === 'BUSINESS' ? `,
+  "detectorGanchosVirales": ["Gancho o hook viral 1 para redes basado en el contenido", "Gancho 2..."],
+  "timestampsYouTube": ["00:00 - Tema 1", "01:30 - Tema 2"]` : ''}
+  ${planPrefix === 'BUSINESS' ? `,
+  "suiteAuditoria": {
+    "riesgosOperativos": "Evaluación de riesgos operativos basados en el texto.",
+    "riesgosLegales": "Evaluación de riesgos contractuales o legales."
+  },
+  "auditBot": {
+    "climaNegociacion": "Análisis del tono y clima de negociación."
+  }` : ''}
+}
+
+Texto a analizar:
+"${content}"`;
+
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+  
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: systemPrompt }] }]
+    })
+  });
+
+  const rawData = await response.json();
+  const aiText = rawData.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+  
+  // Limpiar posibles etiquetas de markdown
+  const cleanJsonStr = aiText.replace(/```json/g, '').replace(/```/g, '').trim();
+  return JSON.parse(cleanJsonStr);
 }
 
 module.exports = async (req, res) => {
@@ -43,13 +87,7 @@ module.exports = async (req, res) => {
     'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
   );
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  if (req.method !== 'POST' && req.method !== 'GET') {
-    return res.status(405).json({ error: 'Método no permitido' });
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end();
 
   const bodyData = req.body || {};
   const queryData = req.query || {};
@@ -58,34 +96,24 @@ module.exports = async (req, res) => {
   const action = bodyData.action || queryData.action;
   const content = bodyData.content || bodyData.prompt || queryData.content || queryData.prompt;
 
-  // -------------------------------------------------------------
-  // GENERACIÓN DE TOKEN DE PRUEBA (GET desde el botón 1-clic)
-  // -------------------------------------------------------------
+  // Generar token de prueba 1-clic
   if (req.method === 'GET' || action === 'generate_trial' || !token || token === 'TRIAL' || token === 'FREE') {
     const trialTimestamp = Date.now();
     const trialPayload = `CASUAL-${trialTimestamp}`;
-    const trialSignature = crypto
-      .createHmac('sha256', SECRET_KEY)
-      .update(trialPayload)
-      .digest('hex');
-
-    const generatedTrialToken = `${trialPayload}-${trialSignature}`;
-
+    const trialSignature = crypto.createHmac('sha256', SECRET_KEY).update(trialPayload).digest('hex');
     return res.status(200).json({
       success: true,
       message: 'Token de prueba generado con éxito',
-      token: generatedTrialToken
+      token: `${trialPayload}-${trialSignature}`
     });
   }
 
-  // -------------------------------------------------------------
-  // VALIDACIÓN DE TOKEN Y PROCESAMIENTO DE ANÁLISIS (POST)
-  // -------------------------------------------------------------
+  // Validar token
   const cleanToken = String(token).trim();
   const parts = cleanToken.split('-');
 
   if (parts.length !== 3) {
-    return res.status(401).json({ error: 'Formato de token inválido. Debe contener PREFIJO-TIMESTAMP-FIRMA.' });
+    return res.status(401).json({ error: 'Formato de token inválido.' });
   }
 
   const [planPrefix, timestampStr, signature] = parts;
@@ -96,55 +124,23 @@ module.exports = async (req, res) => {
   }
 
   if (!isTrialValid(timestampStr)) {
-    return res.status(403).json({ error: 'El token ha expirado (máximo 7 días de vigencia).' });
+    return res.status(403).json({ error: 'El token ha expirado.' });
   }
 
   const upperPrefix = planPrefix.toUpperCase();
-  let planName = upperPrefix;
 
-  // Generar la estructura de datos que tu frontend index.html espera mostrar en pantalla
-  const analysisResult = {
-    minutaExpress: `Reunión procesada exitosamente con el plan ${planName}.\n\nResumen del contenido analizado:\n"${content || 'Sin texto de entrada proporcionado'}"`,
-    tareasYCompromisos: [
-      "Revisar los puntos clave extraídos por el motor de IA.",
-      "Compartir el reporte ejecutivo con los involucrados directos.",
-      "Asegurar la validación de plazos y responsables."
-    ],
-    puntosClaveCotidianos: [
-      "Optimización de tiempos lograda en más del 85%.",
-      "Estructuración automática adaptada al nivel de suscripción."
-    ],
-    sintetizadorDeTextos: "El documento o transcripción mantiene una coherencia óptima para la toma de decisiones C-Level."
-  };
-
-  // Si el plan es Creadores o Business, añadimos los módulos avanzados correspondientes
-  if (upperPrefix === 'PRO' || upperPrefix === 'BUSINESS') {
-    analysisResult.detectorGanchosVirales = [
-      "🔥 \"Nadie te dice esto sobre la automatización real...\"",
-      "⚡ \"El secreto para recortar horas de trabajo en segundos.\""
-    ];
-    analysisResult.timestampsYouTube = [
-      "00:00 - Introducción y contexto principal",
-      "01:15 - Revelación del flujo automatizado",
-      "03:40 - Conclusiones y cierre de impacto"
-    ];
+  try {
+    const aiAnalysis = await analyzeWithGemini(content, upperPrefix);
+    
+    return res.status(200).json({
+      success: true,
+      result: {
+        plan: upperPrefix,
+        data: aiAnalysis
+      }
+    });
+  } catch (err) {
+    console.error('Error al procesar con IA:', err);
+    return res.status(500).json({ error: 'Error interno al analizar el contenido con IA.' });
   }
-
-  if (upperPrefix === 'BUSINESS') {
-    analysisResult.suiteAuditoria = {
-      riesgosOperativos: "Bajo riesgo de fricción en la ejecución de tareas asíncronas.",
-      riesgosLegales: "Cláusulas de confidencialidad respaldadas por cifrado estricto."
-    };
-    analysisResult.auditBot = {
-      climaNegociacion: "Favorable, asertivo y orientado a resultados inmediatos."
-    };
-  }
-
-  return res.status(200).json({
-    success: true,
-    result: {
-      plan: planName,
-      data: analysisResult
-    }
-  });
 };
