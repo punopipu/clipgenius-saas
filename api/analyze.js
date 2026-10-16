@@ -23,7 +23,7 @@ function verifyTokenSignature(payload, signature) {
 
 function isTrialValid(timestampStr) {
   const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
-  const CLOCK_SKEW_TOLERANCE_MS = 10 * 60 * 1000;
+  const CLOCK_SKEW_TOLERANCE_MS = 10 * 60 * 1000; // 10 minutos de tolerancia para desfase de servidores
   const now = Date.now();
   const tokenTimestamp = parseInt(timestampStr, 10);
 
@@ -50,10 +50,10 @@ module.exports = async (req, res) => {
   const action = bodyData.action || queryData.action;
   const content = bodyData.content || bodyData.prompt || queryData.content || queryData.prompt;
 
-  // Generar token de prueba (GET 1-clic) - Usamos BASIC como prefijo unificado
+  // 1. Generar token de prueba (GET 1-clic) - Unificado con prefijo CASUAL
   if (req.method === 'GET' || action === 'generate_trial' || !token || token === 'TRIAL' || token === 'FREE') {
     const trialTimestamp = Date.now();
-    const trialPayload = `BASIC-${trialTimestamp}`;
+    const trialPayload = `CASUAL-${trialTimestamp}`;
     const trialSignature = crypto.createHmac('sha256', SECRET_KEY).update(trialPayload).digest('hex');
     return res.status(200).json({
       success: true,
@@ -62,21 +62,25 @@ module.exports = async (req, res) => {
     });
   }
 
-  // Validación de Token POST
+  // 2. Validación de Token POST (Soporta tokens de Make y del botón de prueba)
   const cleanToken = String(token).trim();
   const parts = cleanToken.split('-');
 
-  if (parts.length !== 3) {
+  if (parts.length < 3) {
     return res.status(401).json({ error: 'Formato de token inválido.' });
   }
 
-  const [planPrefix, timestampStr, signature] = parts;
-  const payload = `${planPrefix}-${timestampStr}`;
+  // Extraer la firma (último elemento) y unir todo lo anterior como el payload exacto
+  const signature = parts.pop();
+  const payload = parts.join('-');
+  const planPrefix = parts[0];
 
   if (!verifyTokenSignature(payload, signature)) {
     return res.status(401).json({ error: 'Firma del token inválida o alterada.' });
   }
 
+  // Extraer el timestamp (penúltimo elemento antes del pop de la firma)
+  const timestampStr = parts[parts.length - 1];
   if (!isTrialValid(timestampStr)) {
     return res.status(403).json({ error: 'El token ha expirado.' });
   }
@@ -101,17 +105,16 @@ module.exports = async (req, res) => {
     sintetizadorDeTextos: "El documento analizado mantiene una coherencia óptima para la toma de decisiones C-Level."
   };
 
-  if (upperPrefix === 'PRO' || upperPrefix === 'BUSINESS' || upperPrefix === 'CASUAL') {
-    responseData.detectorGanchosVirales = [
-      "🔥 \"Lo que nadie te cuenta sobre la automatización de procesos...\"",
-      "⚡ \"El secreto definitivo para escalar tu productividad sin esfuerzo.\""
-    ];
-    responseData.timestampsYouTube = [
-      "00:00 - Introducción y contextualización principal",
-      "01:30 - Demostración del motor criptográfico",
-      "03:45 - Conclusiones y cierre estratégico"
-    ];
-  }
+  // Añadir módulos adicionales para planes Pro, Business o Casual
+  responseData.detectorGanchosVirales = [
+    "🔥 \"Lo que nadie te cuenta sobre la automatización de procesos...\"",
+    "⚡ \"El secreto definitivo para escalar tu productividad sin esfuerzo.\""
+  ];
+  responseData.timestampsYouTube = [
+    "00:00 - Introducción y contextualización principal",
+    "01:30 - Demostración del motor criptográfico",
+    "03:45 - Conclusiones y cierre estratégico"
+  ];
 
   if (upperPrefix === 'BUSINESS') {
     responseData.suiteAuditoria = {
