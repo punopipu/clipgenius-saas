@@ -32,6 +32,27 @@ function isTrialValid(timestampStr) {
   return age >= -CLOCK_SKEW_TOLERANCE_MS && age <= SEVEN_DAYS_MS;
 }
 
+// Función auxiliar para leer el cuerpo de la petición en Vercel
+async function parseBody(req) {
+  if (req.body) {
+    if (typeof req.body === 'string') {
+      try { return JSON.parse(req.body); } catch (e) { return {}; }
+    }
+    return req.body;
+  }
+  return new Promise((resolve) => {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        resolve(JSON.parse(body));
+      } catch (e) {
+        resolve({});
+      }
+    });
+  });
+}
+
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -43,24 +64,15 @@ module.exports = async (req, res) => {
 
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  // Asegurar parseo correcto del cuerpo de la petición en Vercel
-  let bodyData = req.body || {};
-  if (typeof bodyData === 'string') {
-    try {
-      bodyData = JSON.parse(bodyData);
-    } catch (e) {
-      bodyData = {};
-    }
-  }
-
+  const bodyData = await parseBody(req);
   const queryData = req.query || {};
   
   const token = bodyData.token || queryData.token;
   const action = bodyData.action || queryData.action;
   const content = bodyData.content || bodyData.prompt || queryData.content || queryData.prompt;
 
-  // 1. Generar token de prueba (GET 1-clic)
-  if (req.method === 'GET' || action === 'generate_trial' || !token || token === 'TRIAL' || token === 'FREE') {
+  // 1. Generar token de prueba (GET 1-clic o petición sin token)
+  if (req.method === 'GET' || action === 'generate_trial' || (!token && req.method === 'POST')) {
     const trialTimestamp = Date.now();
     const trialPayload = `CASUAL-${trialTimestamp}`;
     const trialSignature = crypto.createHmac('sha256', SECRET_KEY).update(trialPayload).digest('hex');
