@@ -23,7 +23,7 @@ function verifyTokenSignature(payload, signature) {
 
 function isTrialValid(timestampStr) {
   const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
-  const CLOCK_SKEW_TOLERANCE_MS = 10 * 60 * 1000; // 10 minutos de tolerancia para desfase de servidores
+  const CLOCK_SKEW_TOLERANCE_MS = 10 * 60 * 1000;
   const now = Date.now();
   const tokenTimestamp = parseInt(timestampStr, 10);
 
@@ -43,14 +43,23 @@ module.exports = async (req, res) => {
 
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const bodyData = req.body || {};
+  // Asegurar parseo correcto del cuerpo de la petición en Vercel
+  let bodyData = req.body || {};
+  if (typeof bodyData === 'string') {
+    try {
+      bodyData = JSON.parse(bodyData);
+    } catch (e) {
+      bodyData = {};
+    }
+  }
+
   const queryData = req.query || {};
   
   const token = bodyData.token || queryData.token;
   const action = bodyData.action || queryData.action;
   const content = bodyData.content || bodyData.prompt || queryData.content || queryData.prompt;
 
-  // 1. Generar token de prueba (GET 1-clic) - Unificado con prefijo CASUAL
+  // 1. Generar token de prueba (GET 1-clic)
   if (req.method === 'GET' || action === 'generate_trial' || !token || token === 'TRIAL' || token === 'FREE') {
     const trialTimestamp = Date.now();
     const trialPayload = `CASUAL-${trialTimestamp}`;
@@ -62,7 +71,7 @@ module.exports = async (req, res) => {
     });
   }
 
-  // 2. Validación de Token POST (Soporta tokens de Make y del botón de prueba)
+  // 2. Validación de Token POST
   const cleanToken = String(token).trim();
   const parts = cleanToken.split('-');
 
@@ -70,7 +79,6 @@ module.exports = async (req, res) => {
     return res.status(401).json({ error: 'Formato de token inválido.' });
   }
 
-  // Extraer la firma (último elemento) y unir todo lo anterior como el payload exacto
   const signature = parts.pop();
   const payload = parts.join('-');
   const planPrefix = parts[0];
@@ -79,7 +87,6 @@ module.exports = async (req, res) => {
     return res.status(401).json({ error: 'Firma del token inválida o alterada.' });
   }
 
-  // Extraer el timestamp (penúltimo elemento antes del pop de la firma)
   const timestampStr = parts[parts.length - 1];
   if (!isTrialValid(timestampStr)) {
     return res.status(403).json({ error: 'El token ha expirado.' });
@@ -90,7 +97,6 @@ module.exports = async (req, res) => {
     ? String(content).trim() 
     : "Contenido predeterminado procesado correctamente.";
 
-  // Estructura de datos garantizada para que el frontend pinte todas las secciones
   const responseData = {
     minutaExpress: `Resumen ejecutivo generado bajo el plan ${upperPrefix}:\n\n"${textAnalyzed}"`,
     tareasYCompromisos: [
@@ -105,7 +111,6 @@ module.exports = async (req, res) => {
     sintetizadorDeTextos: "El documento analizado mantiene una coherencia óptima para la toma de decisiones C-Level."
   };
 
-  // Añadir módulos adicionales para planes Pro, Business o Casual
   responseData.detectorGanchosVirales = [
     "🔥 \"Lo que nadie te cuenta sobre la automatización de procesos...\"",
     "⚡ \"El secreto definitivo para escalar tu productividad sin esfuerzo.\""
