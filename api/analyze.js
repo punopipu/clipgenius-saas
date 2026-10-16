@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 
 // Clave secreta HMAC
-const SECRET_KEY = process.env.MAKE_HMAC_SECRET || 'MiClaveUltraSecreta2026';
+const SECRET_KEY = 'MiClaveUltraSecreta2026';
 
 /**
  * Valida la firma HMAC/SHA-256 del token
