@@ -1,11 +1,8 @@
 const crypto = require('crypto');
 
-// Clave secreta fija para Make y Vercel
+// Clave secreta absoluta y unificada para Make y Vercel
 const SECRET_KEY = 'MiClaveUltraSecreta2026';
 
-/**
- * Valida la firma HMAC/SHA-256 del token evitando errores por espacios o mayúsculas
- */
 function verifyTokenSignature(payload, signature) {
   try {
     const expectedSignature = crypto
@@ -14,7 +11,7 @@ function verifyTokenSignature(payload, signature) {
       .digest('hex')
       .toLowerCase();
 
-    const cleanSignature = signature.trim().toLowerCase();
+    const cleanSignature = String(signature).trim().toLowerCase();
 
     const bufferExpected = Buffer.from(expectedSignature, 'utf-8');
     const bufferReceived = Buffer.from(cleanSignature, 'utf-8');
@@ -30,9 +27,6 @@ function verifyTokenSignature(payload, signature) {
   }
 }
 
-/**
- * Revisa si una prueba o suscripción de 7 días sigue vigente
- */
 function isTrialValid(timestampStr) {
   const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
   const now = Date.now();
@@ -45,7 +39,6 @@ function isTrialValid(timestampStr) {
 }
 
 module.exports = async (req, res) => {
-  // Configurar encabezados CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -69,11 +62,9 @@ module.exports = async (req, res) => {
     return res.status(400).json({ error: 'El campo token es obligatorio.' });
   }
 
-  // Limpiar espacios en blanco al inicio y final
   const cleanToken = String(token).trim();
   const parts = cleanToken.split('-');
 
-  // Estructura esperada: PREFIJO-TIMESTAMP-FIRMA (ej. PRO-1792144827000-hash...)
   if (parts.length !== 3) {
     return res.status(401).json({ error: 'Formato de token inválido.' });
   }
@@ -81,19 +72,18 @@ module.exports = async (req, res) => {
   const [planPrefix, timestampStr, signature] = parts;
   const payload = `${planPrefix}-${timestampStr}`;
 
-  // 1. Validar la autenticidad criptográfica con Make
+  // Validar firma HMAC con la clave fija
   const isValidHMAC = verifyTokenSignature(payload, signature);
 
   if (!isValidHMAC) {
     return res.status(401).json({ error: 'Firma del token inválida o alterada.' });
   }
 
-  // 2. Validar vigencia de tiempo (7 días)
+  // Validar vigencia de 7 días
   if (!isTrialValid(timestampStr)) {
     return res.status(403).json({ error: 'El token ha expirado (máximo 7 días de vigencia).' });
   }
 
-  // 3. Determinar el nivel del plan según el prefijo
   let planName = 'Desconocido';
   let modelLimit = 'Básico';
 
@@ -114,7 +104,6 @@ module.exports = async (req, res) => {
       return res.status(400).json({ error: 'Tipo de plan no reconocido en el token.' });
   }
 
-  // Respuesta exitosa formateada limpia
   return res.status(200).json({
     success: true,
     message: 'Token verificado con éxito',
@@ -122,6 +111,6 @@ module.exports = async (req, res) => {
     limits: modelLimit,
     analysis: prompt 
       ? `[Procesado para ${planName}]: ${prompt}`
-      : 'Consola activada con éxito. Puedes comenzar a enviar solicitudes.'
+      : 'Consola activada con éxito. Acceso concedido.'
   });
 };
