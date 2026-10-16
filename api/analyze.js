@@ -29,13 +29,16 @@ function verifyTokenSignature(payload, signature) {
 
 function isTrialValid(timestampStr) {
   const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+  const FIVE_MINUTES_MS = 5 * 60 * 1000; // Tolerancia para evitar desfase de relojes entre Make y Vercel
   const now = Date.now();
   const tokenTimestamp = parseInt(timestampStr, 10);
 
   if (isNaN(tokenTimestamp)) return false;
 
   const age = now - tokenTimestamp;
-  return age >= 0 && age <= SEVEN_DAYS_MS;
+  
+  // Permite hasta 5 minutos de diferencia en el futuro por desfase de servidores, y hasta 7 días de antigüedad
+  return age >= -FIVE_MINUTES_MS && age <= SEVEN_DAYS_MS;
 }
 
 module.exports = async (req, res) => {
@@ -72,16 +75,16 @@ module.exports = async (req, res) => {
   const [planPrefix, timestampStr, signature] = parts;
   const payload = `${planPrefix}-${timestampStr}`;
 
-  // Validar firma HMAC con la clave fija
+  // 1. Validar firma HMAC con la clave fija
   const isValidHMAC = verifyTokenSignature(payload, signature);
 
   if (!isValidHMAC) {
     return res.status(401).json({ error: 'Firma del token inválida o alterada.' });
   }
 
-  // Validar vigencia de 7 días
+  // 2. Validar vigencia considerando la tolerancia de relojes
   if (!isTrialValid(timestampStr)) {
-    return res.status(403).json({ error: 'El token ha expirado (máximo 7 días de vigencia).' });
+    return res.status(403).json({ error: 'El token ha expirado o su marca de tiempo es inválida.' });
   }
 
   let planName = 'Desconocido';
